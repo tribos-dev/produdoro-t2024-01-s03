@@ -44,6 +44,13 @@ public class TarefaApplicationService implements TarefaService {
 
     @Override
     public void mudaOrdemDaTarefa(String emailDoUsuario, UUID idDaTarefa, int novaPosicao) {
-        Tarefa tarefa = tarefaRepository.buscaTarefaPorId(idDaTarefa).orElseThrow();
+        Tarefa tarefa = tarefaRepository.buscaTarefaPorId(idDaTarefa).orElseThrow(() ->
+                APIException.build(HttpStatus.NOT_FOUND, "Tarefa não encontrada!")
+        );
+        Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(emailDoUsuario);
+        tarefa.pertenceAoUsuario(usuario);
+
+        // Implementar lógica de mudar ordem
+        // Listar todas as tarefas ativas do usuário
     }
 }
