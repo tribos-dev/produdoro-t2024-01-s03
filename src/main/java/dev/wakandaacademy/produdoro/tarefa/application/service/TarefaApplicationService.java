@@ -65,6 +65,7 @@ public class TarefaApplicationService implements TarefaService {
             throw APIException.build(HttpStatus.CONFLICT, "A posição enviada é igual à já presente, insira uma nova.");
 
         tarefa.setPosicao(novaPosicao);
+        tarefaRepository.salva(tarefa);
         List<Tarefa> tarefasComNovasPosicoes = new ArrayList<>();
 
         if (novaPosicao < posicaoAntiga) {
@@ -79,7 +80,6 @@ public class TarefaApplicationService implements TarefaService {
                 tarefasComNovasPosicoes.add(tarefas.get(i));
             }
         }
-        tarefaRepository.salva(tarefa);
         tarefaRepository.salvaVariasTarefas(tarefasComNovasPosicoes);
     }
 }
