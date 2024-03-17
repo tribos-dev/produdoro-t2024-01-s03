@@ -31,7 +31,7 @@ public interface TarefaAPI {
     void mudaOrdemDaTarefa(
             @RequestHeader(name = "Authorization") String token,
             @PathVariable UUID idTarefa,
-            @RequestBody NovaPosicaoDaTarefaRequest novaPosicaoDaTarefaRequest
+            @RequestBody @Valid NovaPosicaoDaTarefaRequest novaPosicaoDaTarefaRequest
     );
 
 }

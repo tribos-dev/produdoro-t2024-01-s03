@@ -37,7 +37,13 @@ public class TarefaRestController implements TarefaAPI {
 
 	@Override
 	public void mudaOrdemDaTarefa(String token, UUID idTarefa, NovaPosicaoDaTarefaRequest novaPosicaoDaTarefaRequest) {
-
+		log.info("[inicia] TarefaRestController - mudaOrdemDaTarefa");
+		String usuario = tokenService.getUsuarioByBearerToken(token)
+				.orElseThrow(() -> APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticação não é valida"));
+		tarefaService.mudaOrdemDaTarefa(usuario, idTarefa, novaPosicaoDaTarefaRequest.getNova_posicao());
+		log.info("achei isso aqui ó: " + usuario);
+		log.info("[finaliza] UsuarioController - alterarStatusParaFoco");
+//		log.info("[idUsuario] {}", idUsuario);
 	}
 
 	private String getUsuarioByToken(String token) {

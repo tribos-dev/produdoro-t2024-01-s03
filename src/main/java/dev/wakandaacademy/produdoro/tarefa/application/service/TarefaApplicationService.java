@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Email;
 import java.util.UUID;
 
 @Service
@@ -42,7 +43,7 @@ public class TarefaApplicationService implements TarefaService {
     }
 
     @Override
-    public void mudaOrdemDaTarefa(UUID idDaTarefa, int novaPosicao) {
+    public void mudaOrdemDaTarefa(String emailDoUsuario, UUID idDaTarefa, int novaPosicao) {
         Tarefa tarefa = tarefaRepository.buscaTarefaPorId(idDaTarefa).orElseThrow();
     }
 }
