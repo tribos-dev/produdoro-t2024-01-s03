@@ -79,7 +79,7 @@ public class TarefaApplicationService implements TarefaService {
                 tarefasComNovasPosicoes.add(tarefas.get(i));
             }
         }
-
+        tarefaRepository.salva(tarefa);
         tarefaRepository.salvaVariasTarefas(tarefasComNovasPosicoes);
     }
 }
