@@ -40,4 +40,9 @@ public class TarefaApplicationService implements TarefaService {
         log.info("[finaliza] TarefaApplicationService - detalhaTarefa");
         return tarefa;
     }
+
+    @Override
+    public void mudaOrdemDaTarefa(UUID idDaTarefa, int novaPosicao) {
+        Tarefa tarefa = tarefaRepository.buscaTarefaPorId(idDaTarefa).orElseThrow();
+    }
 }

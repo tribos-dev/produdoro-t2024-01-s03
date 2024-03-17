@@ -26,4 +26,12 @@ public interface TarefaAPI {
     TarefaDetalhadoResponse detalhaTarefa(@RequestHeader(name = "Authorization",required = true) String token, 
     		@PathVariable UUID idTarefa);
 
+    @PostMapping("/mudar-ordem/{idTarefa}")
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
+    void mudaOrdemDaTarefa(
+            @RequestHeader(name = "Authorization") String token,
+            @PathVariable UUID idTarefa,
+            @RequestBody NovaPosicaoDaTarefaRequest novaPosicaoDaTarefaRequest
+    );
+
 }
