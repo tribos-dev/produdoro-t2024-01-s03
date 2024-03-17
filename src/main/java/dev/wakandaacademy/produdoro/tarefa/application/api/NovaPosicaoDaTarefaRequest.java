@@ -10,7 +10,9 @@ import javax.validation.constraints.PositiveOrZero;
 
 @Value
 public class NovaPosicaoDaTarefaRequest {
-    @PositiveOrZero @NotNull Integer novaPosicao;
+    @PositiveOrZero
+    @NotNull
+    Integer novaPosicao;
 
     @JsonCreator
     public NovaPosicaoDaTarefaRequest(@JsonProperty("novaPosicao") Integer novaPosicao) {
