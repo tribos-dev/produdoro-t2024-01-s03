@@ -2,6 +2,7 @@ package dev.wakandaacademy.produdoro.usuario.application.api;
 
 import javax.validation.Valid;
 
+import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,5 +33,13 @@ public class UsuarioController implements UsuarioAPI {
 		UsuarioCriadoResponse buscaUsuario = usuarioAppplicationService.buscaUsuarioPorId(idUsuario);
 		log.info("[finaliza] UsuarioController - buscaUsuarioPorId");
 		return buscaUsuario;
+	}
+
+	@Override
+	public void mudaStatusParaFoco(String token, UUID idUsuario) {
+		log.info("[inicia] UsuarioController - mudaStatusParaFoco");
+		UsuarioCriadoResponse usuario = usuarioAppplicationService.buscaUsuarioPorId(idUsuario);
+		usuarioAppplicationService.mudaStatusEndereco(usuario.getIdUsuario());
+		log.info("[finaliza] UsuarioController - mudaStatusParaFoco");
 	}
 }
