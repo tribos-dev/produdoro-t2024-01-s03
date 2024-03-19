@@ -40,7 +40,7 @@ public class UsuarioController implements UsuarioAPI {
 	public void mudaStatusParaFoco(String token, UUID idUsuario) {
 		log.info("[inicia] UsuarioController - mudaStatusParaFoco");
 		String usuario = tokenService.getUsuarioByBearerToken(token)
-				.orElseThrow(() -> APIException.build(HttpStatus.UNAUTHORIZED, "Token inválido"));
+				.orElseThrow(() -> APIException.build(HttpStatus.FORBIDDEN, "Token inválido"));
 		usuarioAppplicationService.mudaStatusParaFoco(usuario, idUsuario);
 		log.info("[finaliza] UsuarioController - mudaStatusParaFoco");
 	}
