@@ -21,7 +21,7 @@ public class UsuarioRepositoryMongoDB implements UsuarioRepository {
 	public Usuario salva(Usuario usuario) {
 		log.info("[inicia] UsuarioRepositoryMongoDB - salva");
 		Usuario novoUsuario = usuarioMongoRepository.save(usuario);
-		log.info("[inicia] UsuarioRepositoryMongoDB - salva");
+		log.info("[finaliza] UsuarioRepositoryMongoDB - salva");
 		return novoUsuario;
 	}
 
