@@ -1,23 +1,16 @@
 package dev.wakandaacademy.produdoro.usuario.domain;
 
-import java.util.UUID;
-
-import javax.validation.constraints.Email;
-
 import dev.wakandaacademy.produdoro.handler.APIException;
+import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
+import dev.wakandaacademy.produdoro.usuario.application.api.UsuarioNovoRequest;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
-import dev.wakandaacademy.produdoro.usuario.application.api.UsuarioNovoRequest;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.springframework.http.HttpStatus;
+
+import javax.validation.constraints.Email;
+import java.util.UUID;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -43,15 +36,15 @@ public class Usuario {
 		this.status = StatusUsuario.FOCO;
 		this.configuracao = new ConfiguracaoUsuario(configuracaoPadrao);
 	}
-	private void validaUsuario(UUID idUsuario) {
+	public void validaUsuario(UUID idUsuario) {
 		if(!this.idUsuario.equals(idUsuario)) {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "credencial de autenticação não é válida!");
 		}
 	}
-	private void validaSeUsuarioJaEstaEmFoco(UUID idUsuario) {
-		if(this.status.equals(StatusUsuario.FOCO)) {
-			throw APIException.build(HttpStatus.BAD_REQUEST, "Usuário já esta em FOCO!");
-		}
+		public void validaSeUsuarioJaEstaEmFoco(UUID idUsuario) {
+			if(this.status.equals(StatusUsuario.FOCO)) {
+				throw APIException.build(HttpStatus.BAD_REQUEST, "Usuário já esta em FOCO!");
+			}
 	}
 	public void mudaStatusParaFoco(UUID idUsuario) {
 		validaUsuario(idUsuario);
