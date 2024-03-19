@@ -47,5 +47,4 @@ public class UsuarioController implements UsuarioAPI {
 		usuarioAppplicationService.mudaStatusPausaCurta(idUsuario, usuarioEmail);
 		log.info("[finaliza] UsuarioController - mudaStatusPausaCurta");
 	}
-
 }
