@@ -61,7 +61,7 @@ class UsuarioApplicationServiceTest {
         when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
         usuarioApplicationService.mudaStatusParaFoco(usuario.getEmail(), usuario.getIdUsuario());
         //acao
-        APIException exception = assertThrows(APIException.class, () -> usuario.validaSeUsuarioJaEstaEmFoco(usuario.getIdUsuario()));
+        APIException exception = assertThrows(APIException.class, usuario::validaSeUsuarioJaEstaEmFoco);
         //verificacao
         assertEquals("Usuário já esta em FOCO!", exception.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusException());

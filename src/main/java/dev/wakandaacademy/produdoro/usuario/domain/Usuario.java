@@ -41,14 +41,14 @@ public class Usuario {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "credencial de autenticação não é válida!");
 		}
 	}
-		public void validaSeUsuarioJaEstaEmFoco(UUID idUsuario) {
+		public void validaSeUsuarioJaEstaEmFoco() {
 			if(this.status.equals(StatusUsuario.FOCO)) {
 				throw APIException.build(HttpStatus.BAD_REQUEST, "Usuário já esta em FOCO!");
 			}
 	}
 	public void mudaStatusParaFoco(UUID idUsuario) {
 		validaUsuario(idUsuario);
-		validaSeUsuarioJaEstaEmFoco(idUsuario);
+		validaSeUsuarioJaEstaEmFoco();
 		this.status = StatusUsuario.FOCO;
 	}
 }
