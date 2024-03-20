@@ -47,5 +47,4 @@ public class TarefaRestController implements TarefaAPI {
 		tarefaService.deletaTarefasConcluidas(idUsuario);
 		log.info("[finaliza] TarefaRestController - deletaTrefasConcluidas");
     }
-
 }
