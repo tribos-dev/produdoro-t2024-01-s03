@@ -48,4 +48,5 @@ public class UsuarioController implements UsuarioAPI {
 		log.info("[finaliza] UsuarioController - mudaStatusPausaLonga");
 
 	}
-}
+		
+	}
