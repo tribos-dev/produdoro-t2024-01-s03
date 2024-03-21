@@ -67,6 +67,19 @@ class TarefaApplicationServiceTest {
 
     }
 
+    @Test
+    void deveRetornarExceptionDaListaDeTarefa() {
+        String usuario = DataHelper.createUsuario().getEmail();
+        when(usuarioRepository.buscaUsuarioPorEmail(anyString())).thenReturn(DataHelper.createUsuario());
+
+        APIException excecao = assertThrows(APIException.class, () -> tarefaApplicationService.buscaTodasSuasTarefa(usuario, UUID.randomUUID()));
+        assertNotNull(excecao);
+        assertEquals(HttpStatus.UNAUTHORIZED, excecao.getStatusException());
+        assertEquals("Credencial de autenticacao nao e valida",excecao.getMessage());
+
+
+    }
+
 
     public TarefaRequest getTarefaRequest() {
         TarefaRequest request = new TarefaRequest("tarefa 1", UUID.randomUUID(), null, null, 0);

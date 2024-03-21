@@ -49,7 +49,7 @@ public class Usuario {
     public void validaUsuario(UUID idUsuario) {
         log.info("[inicia] Usuario - validaUsuario");
         if (!this.idUsuario.equals(idUsuario)) {
-            throw APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticação não é válida");
+            throw APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticacao nao e valida");
 
         }
         log.info("[finaliza] Usuario - validaUsuario");
