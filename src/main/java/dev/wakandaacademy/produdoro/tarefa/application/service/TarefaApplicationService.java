@@ -2,6 +2,7 @@ package dev.wakandaacademy.produdoro.tarefa.application.service;
 
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
@@ -13,6 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -30,6 +32,7 @@ public class TarefaApplicationService implements TarefaService {
         log.info("[finaliza] TarefaApplicationService - criaNovaTarefa");
         return TarefaIdResponse.builder().idTarefa(tarefaCriada.getIdTarefa()).build();
     }
+
     @Override
     public Tarefa detalhaTarefa(String usuario, UUID idTarefa) {
         log.info("[inicia] TarefaApplicationService - detalhaTarefa");
@@ -49,5 +52,20 @@ public class TarefaApplicationService implements TarefaService {
         tarefa.altera(tarefaRequest);
         tarefaRepository.salva(tarefa);
         log.info("[finaliza] TarefaApplicationService - editaTarefa");
+    }
+
+    @Override
+    public List<TarefaDetalhadoResponse> buscaTodasSuasTarefa(String usuario, UUID idUsuario) {
+        log.info("[inicial] - TarefaApplicationService - buscaTodasSuasTarefa");
+        validaUsuario(usuario, idUsuario);
+        List<Tarefa> tarefaList = tarefaRepository.buscaTodasSuasTarefa(idUsuario);
+        log.info("[finaliza] - TarefaApplicationService - buscaTodasSuasTarefa");
+        return TarefaDetalhadoResponse.converte(tarefaList);
+    }
+
+    private void validaUsuario(String usuario, UUID idUsuario) {
+        Usuario usuarioValidado = usuarioRepository.buscaUsuarioPorEmail(usuario);
+        usuarioRepository.buscaUsuarioPorId(idUsuario);
+        usuarioValidado.validaUsuario(idUsuario);
     }
 }
