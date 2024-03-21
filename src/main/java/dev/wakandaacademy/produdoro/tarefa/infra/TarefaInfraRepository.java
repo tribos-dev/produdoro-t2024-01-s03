@@ -32,7 +32,6 @@ public class TarefaInfraRepository implements TarefaRepository {
         log.info("[finaliza] TarefaInfraRepository - salva");
         return tarefa;
     }
-
     @Override
     public Optional<Tarefa> buscaTarefaPorId(UUID idTarefa) {
         log.info("[inicia] TarefaInfraRepository - buscaTarefaPorId");
@@ -40,7 +39,6 @@ public class TarefaInfraRepository implements TarefaRepository {
         log.info("[finaliza] TarefaInfraRepository - buscaTarefaPorId");
         return tarefaPorId;
     }
-
     @Override
     public List<Tarefa> buscaTarefasConcluidasDoUsuario() {
         log.info("[inicia] TarefaInfraRepository - buscaTarefasConcluidasDoUsuario");
