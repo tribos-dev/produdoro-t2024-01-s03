@@ -1,6 +1,7 @@
 package dev.wakandaacademy.produdoro.tarefa.application.service;
 
 import dev.wakandaacademy.produdoro.handler.APIException;
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
@@ -21,7 +22,6 @@ import java.util.UUID;
 public class TarefaApplicationService implements TarefaService {
     private final TarefaRepository tarefaRepository;
     private final UsuarioRepository usuarioRepository;
-
 
     @Override
     public TarefaIdResponse criaNovaTarefa(TarefaRequest tarefaRequest) {
@@ -50,5 +50,18 @@ public class TarefaApplicationService implements TarefaService {
         List<Tarefa> tarefasConcluidas = tarefaRepository.buscaTarefasConcluidasDoUsuario();
         tarefaRepository.deletaTodasAsTarefasConcluidas(tarefasConcluidas);
         log.info("[finaliza] TarefaApplicationService - deletaTarefasConcluidas");
+    }
+    @Override
+    public List<TarefaDetalhadoResponse> buscaTodasSuasTarefa(String usuario, UUID idUsuario) {
+        log.info("[inicial] - TarefaApplicationService - buscaTodasSuasTarefa");
+        validaUsuario(usuario, idUsuario);
+        List<Tarefa> tarefaList = tarefaRepository.buscaTodasSuasTarefa(idUsuario);
+        log.info("[finaliza] - TarefaApplicationService - buscaTodasSuasTarefa");
+        return TarefaDetalhadoResponse.converte(tarefaList);
+    }
+    private void validaUsuario(String usuario, UUID idUsuario) {
+        Usuario usuarioValidado = usuarioRepository.buscaUsuarioPorEmail(usuario);
+        usuarioRepository.buscaUsuarioPorId(idUsuario);
+        usuarioValidado.validaUsuario(idUsuario);
     }
 }
