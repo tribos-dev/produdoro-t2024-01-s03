@@ -44,9 +44,7 @@ public class TarefaApplicationService implements TarefaService {
     @Override
     public void deletaTarefasConcluidas(String usuario, UUID idUsuario) {
         log.info("[inicia] TarefaApplicationService - deletaTarefasConcluidas");
-        Usuario usuarioPorEmail = usuarioRepository.buscaUsuarioPorEmail(usuario);
-        usuarioRepository.buscaUsuarioPorId(idUsuario);
-        usuarioPorEmail.validaUsuario(idUsuario);
+        validaUsuario(usuario, idUsuario);
         List<Tarefa> tarefasConcluidas = tarefaRepository.buscaTarefasConcluidasDoUsuario();
         tarefaRepository.deletaTodasAsTarefasConcluidas(tarefasConcluidas);
         log.info("[finaliza] TarefaApplicationService - deletaTarefasConcluidas");

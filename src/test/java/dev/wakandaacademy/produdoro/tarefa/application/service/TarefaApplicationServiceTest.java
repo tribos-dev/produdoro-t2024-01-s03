@@ -6,12 +6,10 @@ import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoRespon
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
-import dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 import lombok.extern.log4j.Log4j2;
-import org.assertj.core.internal.bytebuddy.pool.TypePool;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,7 +19,6 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -73,7 +70,7 @@ class TarefaApplicationServiceTest {
         APIException excecao = assertThrows(APIException.class, () -> tarefaApplicationService.buscaTodasSuasTarefa(usuario, UUID.randomUUID()));
         assertNotNull(excecao);
         assertEquals(HttpStatus.UNAUTHORIZED, excecao.getStatusException());
-        assertEquals("Credencial de autenticacao nao e valida", excecao.getMessage());
+        assertEquals("Credencial de autenticação não é válida!", excecao.getMessage());
 
 
     }
@@ -86,7 +83,7 @@ class TarefaApplicationServiceTest {
     @Test
     void deletaTarefasConcluidas() {
         Usuario usuario = DataHelper.createUsuario();
-        List<Tarefa> tarefas = createListTarefasConcluidas(usuario);
+        List<Tarefa> tarefas = DataHelper.createListTarefasConcluidas(usuario);
         when(usuarioRepository.buscaUsuarioPorEmail(usuario.getEmail())).thenReturn(usuario);
         when(tarefaRepository.buscaTarefasConcluidasDoUsuario()).thenReturn(tarefas);
         List<Tarefa> tarefasConcluidas = tarefaRepository.buscaTarefasConcluidasDoUsuario();
@@ -94,20 +91,7 @@ class TarefaApplicationServiceTest {
 
         verify(usuarioRepository, times(1)).buscaUsuarioPorEmail(usuario.getEmail());
         verify(usuarioRepository, times(1)).buscaUsuarioPorId(usuario.getIdUsuario());
-        when(tarefaRepository.buscaTarefasConcluidasDoUsuario()).thenReturn(tarefas);
         verify(tarefaRepository, times(1)).deletaTodasAsTarefasConcluidas(tarefasConcluidas);
-    }
-
-    private List<Tarefa> createListTarefasConcluidas(Usuario usuario) {
-        return List.of(Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 1").idUsuario(usuario.getIdUsuario()).
-                        status(StatusTarefa.A_FAZER).build(),
-                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 2").idUsuario(usuario.getIdUsuario())
-                        .status(StatusTarefa.CONCLUIDA).build(),
-                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 3").idUsuario(usuario.getIdUsuario())
-                        .status(StatusTarefa.A_FAZER).build(),
-                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 4").idUsuario(usuario.getIdUsuario())
-                        .status(StatusTarefa.CONCLUIDA).build()
-        );
     }
     @Test
     void validaUsuarioTest() {
