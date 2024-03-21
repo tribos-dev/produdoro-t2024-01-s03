@@ -32,6 +32,7 @@ public class UsuarioApplicationService implements UsuarioService {
 		usuarioRepository.salva(usuario);
 		log.info("[finaliza] UsuarioApplicationService - criaNovoUsuario");
 		return new UsuarioCriadoResponse(usuario);
+
 	}
 
 
