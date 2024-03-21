@@ -44,14 +44,17 @@ public class TarefaInfraRepository implements TarefaRepository {
     public List<Tarefa> buscaTarefasConcluidasDoUsuario() {
         log.info("[inicia] TarefaInfraRepository - buscaTarefasConcluidasDoUsuario");
         List<Tarefa> tarefasConcluidas = tarefaSpringMongoDBRepository.findAllByStatus(StatusTarefa.CONCLUIDA);
+        if (tarefasConcluidas.isEmpty()){
+            throw APIException.build(HttpStatus.NOT_FOUND,"Não existem tarefas concluidas" );
+        }
         log.info("[finaliza] TarefaInfraRepository - buscaTarefasConcluidasDoUsuario");
         return tarefasConcluidas;
     }
 
     @Override
-    public void deletaTodasAsTarefasConcluidas() {
+    public void deletaTodasAsTarefasConcluidas(List<Tarefa> tarefasConcluidas) {
         log.info("[inicia] TarefaInfraRepository - deletaTodasAsTarefasConcluidas");
-
+        tarefaSpringMongoDBRepository.deleteAll(tarefasConcluidas);
         log.info("[finaliza] TarefaInfraRepository - deletaTodasAsTarefasConcluidas");
     }
 }

@@ -4,7 +4,6 @@ import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
-import dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
@@ -43,11 +42,13 @@ public class TarefaApplicationService implements TarefaService {
         return tarefa;
     }
     @Override
-    public void deletaTarefasConcluidas(UUID idUsuario) {
+    public void deletaTarefasConcluidas(String usuario, UUID idUsuario) {
         log.info("[inicia] TarefaApplicationService - deletaTarefasConcluidas");
-//        Usuario usuario = usuarioRepository.buscaUsuarioPorId(idUsuario);
+        Usuario usuarioPorEmail = usuarioRepository.buscaUsuarioPorEmail(usuario);
+        usuarioRepository.buscaUsuarioPorId(idUsuario);
+        usuarioPorEmail.validaUsuario(idUsuario);
         List<Tarefa> tarefasConcluidas = tarefaRepository.buscaTarefasConcluidasDoUsuario();
-        tarefaRepository.deletaTodasAsTarefasConcluidas();
+        tarefaRepository.deletaTodasAsTarefasConcluidas(tarefasConcluidas);
         log.info("[finaliza] TarefaApplicationService - deletaTarefasConcluidas");
     }
 }

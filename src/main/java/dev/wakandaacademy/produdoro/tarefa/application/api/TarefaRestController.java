@@ -44,7 +44,7 @@ public class TarefaRestController implements TarefaAPI {
     public void deletaTrefasConcluidas(String token, UUID idUsuario) {
 		log.info("[inicia] TarefaRestController - deletaTrefasConcluidas");
 		String usuario = getUsuarioByToken(token);
-		tarefaService.deletaTarefasConcluidas(idUsuario);
+		tarefaService.deletaTarefasConcluidas(usuario,idUsuario);
 		log.info("[finaliza] TarefaRestController - deletaTrefasConcluidas");
     }
 }
