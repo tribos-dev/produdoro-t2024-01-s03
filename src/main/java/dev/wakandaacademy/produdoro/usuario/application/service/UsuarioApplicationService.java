@@ -32,9 +32,8 @@ public class UsuarioApplicationService implements UsuarioService {
 		usuarioRepository.salva(usuario);
 		log.info("[finaliza] UsuarioApplicationService - criaNovoUsuario");
 		return new UsuarioCriadoResponse(usuario);
+
 	}
-
-
 	@Override
 	public UsuarioCriadoResponse buscaUsuarioPorId(UUID idUsuario) {
 		log.info("[inicia] UsuarioApplicationService - buscaUsuarioPorId");

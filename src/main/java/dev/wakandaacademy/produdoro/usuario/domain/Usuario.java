@@ -4,6 +4,7 @@ import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
 import dev.wakandaacademy.produdoro.usuario.application.api.UsuarioNovoRequest;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -18,6 +19,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @Document(collection = "Usuario")
+@Log4j2
 public class Usuario {
 	@Id
 	private UUID idUsuario;
@@ -36,11 +38,6 @@ public class Usuario {
 		this.status = StatusUsuario.FOCO;
 		this.configuracao = new ConfiguracaoUsuario(configuracaoPadrao);
 	}
-	public void validaUsuario(UUID idUsuario) {
-		if(!this.idUsuario.equals(idUsuario)) {
-			throw APIException.build(HttpStatus.UNAUTHORIZED, "credencial de autenticação não é válida!");
-		}
-	}
 		public void validaSeUsuarioJaEstaEmFoco() {
 			if(this.status.equals(StatusUsuario.FOCO)) {
 				throw APIException.build(HttpStatus.BAD_REQUEST, "Usuário já esta em FOCO!");
@@ -51,4 +48,12 @@ public class Usuario {
 		validaSeUsuarioJaEstaEmFoco();
 		this.status = StatusUsuario.FOCO;
 	}
+    public void validaUsuario(UUID idUsuario) {
+        log.info("[inicia] Usuario - validaUsuario");
+        if (!this.idUsuario.equals(idUsuario)) {
+        log.info("[finaliza] Usuario - validaUsuario");
+            throw APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticacao nao e valida");
+        }
+        log.info("[finaliza] Usuario - validaUsuario");
+    }
 }
