@@ -53,6 +53,13 @@ public class TarefaApplicationService implements TarefaService {
         return TarefaDetalhadoResponse.converte(tarefaList);
     }
 
+    @Override
+    public void patchIncrementaPomodoro(String usuario, UUID idTarefa) {
+        Tarefa tarefa = detalhaTarefa(usuario,idTarefa);
+        tarefa.incrementaPomodoro();
+        tarefaRepository.salva(tarefa);
+    }
+
     private void validaUsuario(String usuario, UUID idUsuario) {
         Usuario usuarioValidado = usuarioRepository.buscaUsuarioPorEmail(usuario);
         usuarioRepository.buscaUsuarioPorId(idUsuario);

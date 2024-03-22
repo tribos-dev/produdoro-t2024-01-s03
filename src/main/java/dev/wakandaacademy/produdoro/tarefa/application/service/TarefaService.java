@@ -12,4 +12,6 @@ public interface TarefaService {
     Tarefa detalhaTarefa(String usuario, UUID idTarefa);
 
     List<TarefaDetalhadoResponse> buscaTodasSuasTarefa(String usuario, UUID idUsuario);
+
+    void patchIncrementaPomodoro(String usuario, UUID idTarefa);
 }
