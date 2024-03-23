@@ -3,16 +3,18 @@ package dev.wakandaacademy.produdoro.tarefa.application.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import dev.wakandaacademy.produdoro.DataHelper;
 import dev.wakandaacademy.produdoro.config.security.service.TokenService;
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
+import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 import lombok.extern.log4j.Log4j2;
@@ -84,5 +86,27 @@ class TarefaApplicationServiceTest {
     public TarefaRequest getTarefaRequest() {
         TarefaRequest request = new TarefaRequest("tarefa 1", UUID.randomUUID(), null, null, 0);
         return request;
+    }
+
+    @Test
+    void deveAtivarTarefa() {
+        Usuario usuario = DataHelper.createUsuario();
+        Tarefa tarefa = DataHelper.createTarefa();
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        when(tarefaRepository.buscaTarefaPorId(any())).thenReturn(Optional.ofNullable(tarefa));
+        tarefaApplicationService.ativaTarefa(tarefa.getIdTarefa(), usuario.getEmail());
+        verify(usuarioRepository, times(2)).buscaUsuarioPorEmail(any());
+        verify(tarefaRepository, times(1)).salva(any());
+        assertEquals(StatusAtivacaoTarefa.ATIVA, tarefa.getStatusAtivacao());
+    }
+
+    @Test
+    void naoDeveAtivarTarefa() {
+        Usuario usuario = DataHelper.createUsuario();
+        UUID idTarefa = UUID.fromString("b92ee6fa-9ae9-45ac-afe0-fb8e4460d839");
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        APIException e = assertThrows(APIException.class,
+                () -> tarefaApplicationService.ativaTarefa(idTarefa, usuario.getEmail()));
+        assertEquals(HttpStatus.NOT_FOUND, e.getStatusException());
     }
 }
