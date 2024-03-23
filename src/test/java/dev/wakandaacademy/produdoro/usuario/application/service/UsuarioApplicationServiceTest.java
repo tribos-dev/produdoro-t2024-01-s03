@@ -66,4 +66,22 @@ class UsuarioApplicationServiceTest {
         assertEquals("Usuário já esta em FOCO!", exception.getMessage());
         assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusException());
     }
- }
+	@Test
+	void UsuarioMudaStatusPausaLongaSucesso() {
+		Usuario usuario = DataHelper.createUsuario();
+		when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+		usuarioApplicationService.mudaStatusPausaLonga(usuario.getEmail(), usuario.getIdUsuario());
+		verify(usuarioRepository, times(1)).salva(any());
+		
+	}
+	@Test
+	void UsuarioMudaStatusPausaLongaFalha() {
+		Usuario usuario = DataHelper.createUsuario();
+		when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+		APIException ex = assertThrows(APIException.class,
+				() -> usuarioApplicationService.mudaStatusPausaLonga(usuario.getEmail(), UUID.randomUUID()));
+		assertEquals(APIException.class, ex.getClass());
+		assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusException());
+		assertEquals("Credencial de autenticacao nao e valida", ex.getMessage());
+	}
+}
