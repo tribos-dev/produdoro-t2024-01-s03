@@ -55,14 +55,12 @@ public class TarefaInfraRepository implements TarefaRepository {
         log.info("[finaliza] TarefaInfraRepository - buscaTodasAsTarefasDoUsuario");
         return tarefas;
     }
-
     @Override
     public void salvaVariasTarefas(List<Tarefa> tarefasComNovasPosicoes) {
         log.info("[inicia] TarefaInfraRepository - salvaVariasTarefas");
         tarefaSpringMongoDBRepository.saveAll(tarefasComNovasPosicoes);
         log.info("[finaliza] TarefaInfraRepository - salvaVariasTarefas");
     }
-
     @Override
     public int contarTarefasDoUsuario(UUID idUsuario) {
         log.info("[inicia] TarefaInfraRepository - contarTarefasDoUsuario");
@@ -70,7 +68,6 @@ public class TarefaInfraRepository implements TarefaRepository {
         log.info("[finaliza] TarefaInfraRepository - contarTarefasDoUsuario");
         return contarTarefas;
     }
-
     public void defineNovaPosicaoDaTarefa(Tarefa tarefa, List<Tarefa> tarefas, NovaPosicaoDaTarefaRequest novaPosicao) {
         validaNovaPosicao(tarefas, tarefa, novaPosicao);
         int posicaoAntiga = tarefa.getPosicao();
@@ -84,7 +81,6 @@ public class TarefaInfraRepository implements TarefaRepository {
         salva(tarefa);
         salvaVariasTarefas(tarefasComNovasPosicoes);
     }
-
     private Tarefa atualizaPosicaoTarefa(Tarefa tarefa, boolean incrementa, List<Tarefa> tarefas) {
         if (incrementa) tarefa.incrementaPosicao(tarefas.size());
         else tarefa.decrementaPosicao();
@@ -94,7 +90,6 @@ public class TarefaInfraRepository implements TarefaRepository {
         mongoTemplate.updateFirst(queryAtualizacao, updateAtualizacao, Tarefa.class);
         return tarefa;
     }
-
     private void validaNovaPosicao(List<Tarefa> tarefas,Tarefa tarefa, NovaPosicaoDaTarefaRequest novaPosicao) {
         int posicaoAntiga = tarefa.getPosicao();
         int tamanhoDaLista = tarefas.size();
@@ -126,5 +121,11 @@ public class TarefaInfraRepository implements TarefaRepository {
         List<Tarefa> tarefaList = tarefaSpringMongoDBRepository.findAllByIdUsuarioOrderByPosicaoAsc(IdUsuario);
         log.info("[finaliza] - TarefaInfraRepository - buscaTodasSuasTarefa");
         return tarefaList;
+    }
+    @Override
+    public void deletaTarefaPorId(Tarefa tarefa) {
+        log.info("[inicia] TarefaInfraRepository - deletaTarefaPorId");
+        tarefaSpringMongoDBRepository.delete(tarefa);
+        log.info("[finaliza] TarefaInfraRepository - deletaTarefaPorId");
     }
 }
