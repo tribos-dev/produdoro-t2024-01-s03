@@ -44,5 +44,6 @@ public class Usuario {
         log.info("[finaliza] Usuario - validaUsuario");
             throw APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticação não é válida!");
         }
+        log.info("[finaliza] Usuario - validaUsuario");
     }
 }
