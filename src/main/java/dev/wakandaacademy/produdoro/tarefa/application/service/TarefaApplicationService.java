@@ -24,7 +24,6 @@ public class TarefaApplicationService implements TarefaService {
     private final TarefaRepository tarefaRepository;
     private final UsuarioRepository usuarioRepository;
 
-
     @Override
     public TarefaIdResponse criaNovaTarefa(TarefaRequest tarefaRequest) {
         log.info("[inicia] TarefaApplicationService - criaNovaTarefa");
@@ -45,6 +44,14 @@ public class TarefaApplicationService implements TarefaService {
         return tarefa;
     }
     @Override
+    public void deletaTarefasConcluidas(String usuario, UUID idUsuario) {
+        log.info("[inicia] TarefaApplicationService - deletaTarefasConcluidas");
+        validaUsuario(usuario, idUsuario);
+        List<Tarefa> tarefasConcluidas = tarefaRepository.buscaTarefasConcluidasDoUsuario();
+        tarefaRepository.deletaTodasAsTarefasConcluidas(tarefasConcluidas);
+        log.info("[finaliza] TarefaApplicationService - deletaTarefasConcluidas");
+    }
+    @Override
     public List<TarefaDetalhadoResponse> buscaTodasSuasTarefa(String usuario, UUID idUsuario) {
         log.info("[inicial] - TarefaApplicationService - buscaTodasSuasTarefa");
         validaUsuario(usuario, idUsuario);
@@ -52,13 +59,11 @@ public class TarefaApplicationService implements TarefaService {
         log.info("[finaliza] - TarefaApplicationService - buscaTodasSuasTarefa");
         return TarefaDetalhadoResponse.converte(tarefaList);
     }
-
     private void validaUsuario(String usuario, UUID idUsuario) {
         Usuario usuarioValidado = usuarioRepository.buscaUsuarioPorEmail(usuario);
         usuarioRepository.buscaUsuarioPorId(idUsuario);
         usuarioValidado.validaUsuario(idUsuario);
     }
-
     @Override
     public void mudaOrdemDaTarefa(String emailDoUsuario, UUID idDaTarefa, NovaPosicaoDaTarefaRequest novaPosicao) {
         log.info("[inicia] TarefaApplicationService - mudaOrdemDaTarefa");
