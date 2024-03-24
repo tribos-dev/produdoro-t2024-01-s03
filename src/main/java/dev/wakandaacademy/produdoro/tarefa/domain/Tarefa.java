@@ -12,12 +12,20 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.HttpStatus;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
 import javax.validation.constraints.NotBlank;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@Log4j2
 @Document(collection = "Tarefa")
 public class Tarefa {
 	@Id
@@ -53,11 +61,15 @@ public class Tarefa {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário não é dono da Tarefa solicitada!");
 		}
 	}
-
 	public void incrementaPosicao(int tamanhoDaLista){
 		if (this.posicao < tamanhoDaLista - 1) this.posicao++;
 	}
 	public void decrementaPosicao(){
 		if (this.posicao > 0) this.posicao--;
+		}
+	public void concluiTarefa() {
+		log.info("[inicia] Tarefa - concluiTarefa");
+		this.status = StatusTarefa.CONCLUIDA;
+		log.info("[finaliza] Tarefa - concluiTarefa");
 	}
 }
