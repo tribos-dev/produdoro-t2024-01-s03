@@ -14,9 +14,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -69,33 +67,4 @@ public class TarefaApplicationService implements TarefaService {
         tarefaRepository.defineNovaPosicaoDaTarefa(tarefa, tarefas, novaPosicao);
         log.info("[inicia] TarefaApplicationService - mudaOrdemDaTarefa");
     }
-
-    private void definiNovaPosicaoDaTarefa(List<Tarefa> tarefas, Tarefa tarefa, Integer novaPosicao){
-        int posicaoAntiga = tarefa.getPosicao();
-        int tamanhoDaLista = tarefas.size();
-
-        if (novaPosicao >= tamanhoDaLista)
-            throw APIException.build(HttpStatus.BAD_REQUEST, "A posição da tarefa não pode ser igual, nem maior que a quantidade total de tarefas");
-        if (Objects.equals(novaPosicao, posicaoAntiga))
-            throw APIException.build(HttpStatus.CONFLICT, "A posição enviada é igual à já presente, insira uma nova.");
-
-        tarefa.setPosicao(novaPosicao);
-        tarefaRepository.salva(tarefa);
-        List<Tarefa> tarefasComNovasPosicoes = new ArrayList<>();
-
-        if (novaPosicao < posicaoAntiga) {
-            for (int i = novaPosicao; i < posicaoAntiga; i++) {
-                tarefas.get(i).incrementaPosicao(tamanhoDaLista);
-                tarefasComNovasPosicoes.add(tarefas.get(i));
-            }
-        }
-        else {
-            for (int i = posicaoAntiga + 1; i <= novaPosicao; i++) {
-                tarefas.get(i).decrementaPosicao();
-                tarefasComNovasPosicoes.add(tarefas.get(i));
-            }
-        }
-        tarefaRepository.salvaVariasTarefas(tarefasComNovasPosicoes);
-    }
-
 }
