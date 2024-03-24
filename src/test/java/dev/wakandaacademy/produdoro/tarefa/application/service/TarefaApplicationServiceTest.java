@@ -69,9 +69,6 @@ class TarefaApplicationServiceTest {
 
     @Mock
     UsuarioRepository usuarioRepository;
-    
-    @Mock
-    UsuarioRepository usuarioRepository;
 
 
     @Test

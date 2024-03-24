@@ -70,9 +70,27 @@ public class TarefaApplicationService implements TarefaService {
         Tarefa tarefa = detalhaTarefa(emailDoUsuario, idDaTarefa);
         List<Tarefa> tarefas = tarefaRepository.buscaTodasAsTarefasDoUsuario(tarefa.getIdUsuario());
         tarefaRepository.defineNovaPosicaoDaTarefa(tarefa, tarefas, novaPosicao);
-        log.info("[inicia] TarefaApplicationService - mudaOrdemDaTarefa");
+        log.info("[finaliza] TarefaApplicationService - mudaOrdemDaTarefa");
     }
-	@Override
+
+    @Override
+    public void reordenaTarefasAposDeletarUmaTarefaEspecifica(String emailDoUsuario, Tarefa tarefaDeletada) {
+        log.info("[inicia] TarefaApplicationService - reordenaTarefasAposDeletarUmaTarefaEspecifica");
+        Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(emailDoUsuario);
+        List<Tarefa> tarefas = tarefaRepository.buscaTodasAsTarefasDoUsuario(usuario.getIdUsuario());
+        for (int i = tarefaDeletada.getPosicao(); i < tarefas.size(); i++) tarefas.get(i).decrementaPosicao();
+        tarefaRepository.salvaVariasTarefas(tarefas);
+        log.info("[finaliza] TarefaApplicationService - reordenaTarefasAposDeletarUmaTarefaEspecifica");
+    }
+
+    @Override
+    public void reordenaTarefasAposDeletarTarefasConcluidas() {
+        log.info("[inicia] TarefaApplicationService - reordenaTarefasAposDeletarTarefasConcluidas");
+
+        log.info("[finaliza] TarefaApplicationService - reordenaTarefasAposDeletarTarefasConcluidas");
+    }
+
+    @Override
 	public void concluiTarefa(String usuario, UUID idTarefa) {
 		 log.info("[inicia] TarefaApplicationService - concluiTarefa");
 		 Tarefa tarefa = detalhaTarefa(usuario, idTarefa);
@@ -83,7 +101,9 @@ public class TarefaApplicationService implements TarefaService {
     @Override
     public void deletaTarefa(String usuario, UUID idTarefa) {
         log.info("[inicia] TarefaApplicationService - deletaTarefa");
-        tarefaRepository.deletaTarefaPorId(detalhaTarefa(usuario, idTarefa));
+        Tarefa tarefaASerDeletada = detalhaTarefa(usuario, idTarefa);
+        tarefaRepository.deletaTarefaPorId(tarefaASerDeletada);
+        reordenaTarefasAposDeletarUmaTarefaEspecifica(usuario, tarefaASerDeletada);
         log.info("[finaliza] TarefaApplicationService - deletaTarefa");
     }
 }
