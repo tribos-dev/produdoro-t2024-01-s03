@@ -38,6 +38,16 @@ public class Usuario {
         this.status = StatusUsuario.FOCO;
         this.configuracao = new ConfiguracaoUsuario(configuracaoPadrao);
     }
+	public void validaSeUsuarioJaEstaEmFoco() {
+		if(this.status.equals(StatusUsuario.FOCO)) {
+			throw APIException.build(HttpStatus.BAD_REQUEST, "Usuário já esta em FOCO!");
+		}
+	}
+	public void mudaStatusParaFoco(UUID idUsuario) {
+		validaUsuario(idUsuario);
+		validaSeUsuarioJaEstaEmFoco();
+		this.status = StatusUsuario.FOCO;
+	}
     public void validaUsuario(UUID idUsuario) {
         log.info("[inicia] Usuario - validaUsuario");
         if (!this.idUsuario.equals(idUsuario)) {
@@ -46,4 +56,10 @@ public class Usuario {
         }
         log.info("[finaliza] Usuario - validaUsuario");
     }
+	public void mudaStatusParaPausaLonga() {
+		log.info("[inicia] Usuario - mudaStatusParaPausaLonga");
+		this.status = StatusUsuario.PAUSA_LONGA;
+		log.info("[finaliza] Usuario - mudaStatusParaPausaLonga");
+		
+	}
 }
