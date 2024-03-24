@@ -51,7 +51,7 @@ class UsuarioApplicationServiceTest {
         APIException exception = assertThrows(APIException.class,
                 () -> usuarioApplicationService.mudaStatusParaFoco("emailinvalido@email.com", idUsuarioInvalido));
         //verificacao
-        assertEquals("Credencial de autenticacao nao e valida", exception.getMessage());
+        assertEquals("Credencial de autenticação não é válida!", exception.getMessage());
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
     }
     @Test
@@ -82,6 +82,6 @@ class UsuarioApplicationServiceTest {
 				() -> usuarioApplicationService.mudaStatusPausaLonga(usuario.getEmail(), UUID.randomUUID()));
 		assertEquals(APIException.class, ex.getClass());
 		assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusException());
-		assertEquals("Credencial de autenticacao nao e valida", ex.getMessage());
+		assertEquals("Credencial de autenticação não é válida!", ex.getMessage());
 	}
 }
