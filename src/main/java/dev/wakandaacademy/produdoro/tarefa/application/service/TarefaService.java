@@ -13,7 +13,7 @@ public interface TarefaService {
     Tarefa detalhaTarefa(String usuario, UUID idTarefa);
     void mudaOrdemDaTarefa(String emailDoUsuario, UUID idDaTarefa, NovaPosicaoDaTarefaRequest novaPosicaoDaTarefaRequest);
     void reordenaTarefasAposDeletarUmaTarefaEspecifica(String emailDoUsuario, Tarefa tarefaDeletada);
-    void reordenaTarefasAposDeletarTarefasConcluidas();
+    void reordenaTarefasAposDeletarTarefasConcluidas(UUID idUsuario);
     void deletaTarefasConcluidas(String usuario, UUID idUsuario);
     List<TarefaDetalhadoResponse> buscaTodasSuasTarefa(String usuario, UUID idUsuario);
 	void concluiTarefa(String usuario, UUID idTarefa);

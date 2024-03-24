@@ -49,6 +49,7 @@ public class TarefaApplicationService implements TarefaService {
         validaUsuario(usuario, idUsuario);
         List<Tarefa> tarefasConcluidas = tarefaRepository.buscaTarefasConcluidasDoUsuario();
         tarefaRepository.deletaTodasAsTarefasConcluidas(tarefasConcluidas);
+        reordenaTarefasAposDeletarTarefasConcluidas(idUsuario);
         log.info("[finaliza] TarefaApplicationService - deletaTarefasConcluidas");
     }
     @Override
@@ -84,9 +85,12 @@ public class TarefaApplicationService implements TarefaService {
     }
 
     @Override
-    public void reordenaTarefasAposDeletarTarefasConcluidas() {
+    public void reordenaTarefasAposDeletarTarefasConcluidas(UUID idUsuario) {
         log.info("[inicia] TarefaApplicationService - reordenaTarefasAposDeletarTarefasConcluidas");
-
+        Usuario usuario = usuarioRepository.buscaUsuarioPorId(idUsuario);
+        List<Tarefa> tarefas = tarefaRepository.buscaTodasAsTarefasDoUsuario(usuario.getIdUsuario());
+        for (int i = 0; i < tarefas.size(); i++) tarefas.get(i).setPosicao(i);
+        tarefaRepository.salvaVariasTarefas(tarefas);
         log.info("[finaliza] TarefaApplicationService - reordenaTarefasAposDeletarTarefasConcluidas");
     }
 
