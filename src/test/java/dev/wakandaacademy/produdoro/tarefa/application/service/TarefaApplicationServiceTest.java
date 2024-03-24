@@ -62,7 +62,6 @@ class TarefaApplicationServiceTest {
         List<TarefaDetalhadoResponse> tarefaDetalhadoResponse = tarefaApplicationService.buscaTodasSuasTarefa(usuario, idUsuario);
         assertNotNull(tarefaDetalhadoResponse);
         assertTrue(tarefaDetalhadoResponse.size() > 1);
-
     }
 
     @Test
@@ -74,16 +73,12 @@ class TarefaApplicationServiceTest {
         assertNotNull(excecao);
         assertEquals(HttpStatus.UNAUTHORIZED, excecao.getStatusException());
         assertEquals("Credencial de autenticacao nao e valida",excecao.getMessage());
-
-
     }
-
 
     public TarefaRequest getTarefaRequest() {
         TarefaRequest request = new TarefaRequest("tarefa 1", UUID.randomUUID(), null, null, 0);
         return request;
     }
-
 
     @Test
     void deveEditarTarefa(){
@@ -98,7 +93,7 @@ class TarefaApplicationServiceTest {
         //entao
         verify(usuarioRepository, times(1)).buscaUsuarioPorEmail(usuario.getEmail());
         verify(tarefaRepository, times(1)).buscaTarefaPorId(tarefa.getIdTarefa());
-        assertEquals(editaTarefaRequest.getDescricao(), tarefa.getDescricao());
+        assertEquals("TAREFA 2", tarefa.getDescricao());
     }
 
     @Test

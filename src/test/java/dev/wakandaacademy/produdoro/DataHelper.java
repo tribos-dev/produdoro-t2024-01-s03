@@ -57,7 +57,7 @@ public class DataHelper {
     }
 
     public static EditaTarefaRequest createEditaTarefa() {
-        EditaTarefaRequest editaTarefaRequest = new EditaTarefaRequest("descricao");
+        EditaTarefaRequest editaTarefaRequest = new EditaTarefaRequest("TAREFA 2");
         return editaTarefaRequest;
     }
 }
