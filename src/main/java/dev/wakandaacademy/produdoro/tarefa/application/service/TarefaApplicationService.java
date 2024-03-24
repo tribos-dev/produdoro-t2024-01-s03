@@ -1,6 +1,7 @@
 package dev.wakandaacademy.produdoro.tarefa.application.service;
 
 import dev.wakandaacademy.produdoro.handler.APIException;
+import dev.wakandaacademy.produdoro.tarefa.application.api.NovaPosicaoDaTarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
@@ -28,7 +29,8 @@ public class TarefaApplicationService implements TarefaService {
     @Override
     public TarefaIdResponse criaNovaTarefa(TarefaRequest tarefaRequest) {
         log.info("[inicia] TarefaApplicationService - criaNovaTarefa");
-        Tarefa tarefaCriada = tarefaRepository.salva(new Tarefa(tarefaRequest));
+        int posicaoDaNovaTarefa = tarefaRepository.contarTarefasDoUsuario(tarefaRequest.getIdUsuario());
+        Tarefa tarefaCriada = tarefaRepository.salva(new Tarefa(tarefaRequest, posicaoDaNovaTarefa));
         log.info("[finaliza] TarefaApplicationService - criaNovaTarefa");
         return TarefaIdResponse.builder().idTarefa(tarefaCriada.getIdTarefa()).build();
     }
@@ -45,14 +47,12 @@ public class TarefaApplicationService implements TarefaService {
     }
 
     @Override
-    public void mudaOrdemDaTarefa(String emailDoUsuario, UUID idDaTarefa, int novaPosicao) {
-        Tarefa tarefa = tarefaRepository.buscaTarefaPorId(idDaTarefa).orElseThrow(() ->
-                APIException.build(HttpStatus.NOT_FOUND, "Tarefa não encontrada!")
-        );
-        Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(emailDoUsuario);
-        tarefa.pertenceAoUsuario(usuario);
-        List<Tarefa> tarefas = tarefaRepository.buscaTodasAsTarefasDoUsuario(usuario.getIdUsuario());
-        definiNovaPosicaoDaTarefa(tarefas, tarefa, novaPosicao);
+    public void mudaOrdemDaTarefa(String emailDoUsuario, UUID idDaTarefa, NovaPosicaoDaTarefaRequest novaPosicao) {
+        log.info("[inicia] TarefaApplicationService - mudaOrdemDaTarefa");
+        Tarefa tarefa = detalhaTarefa(emailDoUsuario, idDaTarefa);
+        List<Tarefa> tarefas = tarefaRepository.buscaTodasAsTarefasDoUsuario(tarefa.getIdUsuario());
+        tarefaRepository.defineNovaPosicaoDaTarefa(tarefa, tarefas, novaPosicao);
+        log.info("[inicia] TarefaApplicationService - mudaOrdemDaTarefa");
     }
 
     private void definiNovaPosicaoDaTarefa(List<Tarefa> tarefas, Tarefa tarefa, Integer novaPosicao){

@@ -36,7 +36,7 @@ public class Tarefa {
 	@Setter
 	private int posicao;
 
-	public Tarefa(TarefaRequest tarefaRequest) {
+	public Tarefa(TarefaRequest tarefaRequest, int posicaoDaNovaTarefa) {
 		this.idTarefa = UUID.randomUUID();
 		this.idUsuario = tarefaRequest.getIdUsuario();
 		this.descricao = tarefaRequest.getDescricao();
@@ -45,7 +45,7 @@ public class Tarefa {
 		this.status = StatusTarefa.A_FAZER;
 		this.statusAtivacao = StatusAtivacaoTarefa.INATIVA;
 		this.contagemPomodoro = 1;
-		this.posicao = tarefaRequest.getPosicao();
+		this.posicao = posicaoDaNovaTarefa;
 	}
 
 	public void pertenceAoUsuario(Usuario usuarioPorEmail) {
