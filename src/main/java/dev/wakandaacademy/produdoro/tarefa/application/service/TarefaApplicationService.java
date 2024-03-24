@@ -2,6 +2,7 @@ package dev.wakandaacademy.produdoro.tarefa.application.service;
 
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.api.NovaPosicaoDaTarefaRequest;
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
@@ -45,6 +46,20 @@ public class TarefaApplicationService implements TarefaService {
         log.info("[finaliza] TarefaApplicationService - detalhaTarefa");
         return tarefa;
     }
+    @Override
+    public List<TarefaDetalhadoResponse> buscaTodasSuasTarefa(String usuario, UUID idUsuario) {
+        log.info("[inicial] - TarefaApplicationService - buscaTodasSuasTarefa");
+        validaUsuario(usuario, idUsuario);
+        List<Tarefa> tarefaList = tarefaRepository.buscaTodasSuasTarefa(idUsuario);
+        log.info("[finaliza] - TarefaApplicationService - buscaTodasSuasTarefa");
+        return TarefaDetalhadoResponse.converte(tarefaList);
+    }
+
+    private void validaUsuario(String usuario, UUID idUsuario) {
+        Usuario usuarioValidado = usuarioRepository.buscaUsuarioPorEmail(usuario);
+        usuarioRepository.buscaUsuarioPorId(idUsuario);
+        usuarioValidado.validaUsuario(idUsuario);
+    }
 
     @Override
     public void mudaOrdemDaTarefa(String emailDoUsuario, UUID idDaTarefa, NovaPosicaoDaTarefaRequest novaPosicao) {
@@ -82,4 +97,5 @@ public class TarefaApplicationService implements TarefaService {
         }
         tarefaRepository.salvaVariasTarefas(tarefasComNovasPosicoes);
     }
+
 }

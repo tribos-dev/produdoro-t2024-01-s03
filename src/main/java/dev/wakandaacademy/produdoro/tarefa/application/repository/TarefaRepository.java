@@ -8,11 +8,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface TarefaRepository {
-
     Tarefa salva(Tarefa tarefa);
     Optional<Tarefa> buscaTarefaPorId(UUID idTarefa);
     List<Tarefa> buscaTodasAsTarefasDoUsuario(UUID idUsuario);
     void salvaVariasTarefas(List<Tarefa> tarefasComNovasPosicoes);
     int contarTarefasDoUsuario(UUID idUsuario);
     void defineNovaPosicaoDaTarefa(Tarefa tarefa, List<Tarefa> tarefas, NovaPosicaoDaTarefaRequest novaPosicaoDaTarefaRequest);
+    List<Tarefa> buscaTodasSuasTarefa(UUID IdUsuario);
 }

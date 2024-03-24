@@ -17,6 +17,9 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 @Log4j2
@@ -102,5 +105,13 @@ public class TarefaInfraRepository implements TarefaRepository {
                     "A posição enviada é igual à já presente, insira uma nova.";
             throw APIException.build(HttpStatus.BAD_REQUEST, mensagem);
         }
+    }
+
+    public List<Tarefa> buscaTodasSuasTarefa(UUID IdUsuario) {
+        log.info("[inicial] - TarefaInfraRepository - buscaTodasSuasTarefa");
+        List<Tarefa> tarefaList = tarefaSpringMongoDBRepository.findAllByIdUsuario(IdUsuario);
+
+        log.info("[finaliza] - TarefaInfraRepository - buscaTodasSuasTarefa");
+        return tarefaList;
     }
 }
