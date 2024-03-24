@@ -55,9 +55,12 @@ public class TarefaApplicationService implements TarefaService {
 
     @Override
     public void patchIncrementaPomodoro(String usuario, UUID idTarefa) {
+        log.info("[inicial] - TarefaApplicationService - patchIncrementaPomodoro");
         Tarefa tarefa = detalhaTarefa(usuario,idTarefa);
         tarefa.incrementaPomodoro();
         tarefaRepository.salva(tarefa);
+        log.info("[finaliza] - TarefaApplicationService - patchIncrementaPomodoro");
+
     }
 
     private void validaUsuario(String usuario, UUID idUsuario) {

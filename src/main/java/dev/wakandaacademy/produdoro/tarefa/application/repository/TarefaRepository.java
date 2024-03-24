@@ -12,4 +12,6 @@ public interface TarefaRepository {
     Optional<Tarefa> buscaTarefaPorId(UUID idTarefa);
 
     List<Tarefa> buscaTodasSuasTarefa(UUID IdUsuario);
+
+
 }

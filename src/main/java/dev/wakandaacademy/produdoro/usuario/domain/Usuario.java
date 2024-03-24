@@ -55,4 +55,6 @@ public class Usuario {
         log.info("[finaliza] Usuario - validaUsuario");
     }
 
+
+
 }

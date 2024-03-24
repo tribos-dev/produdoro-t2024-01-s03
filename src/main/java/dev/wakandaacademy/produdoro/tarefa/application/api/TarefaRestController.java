@@ -50,10 +50,10 @@ public class TarefaRestController implements TarefaAPI {
 
 	@Override
 	public void patchIncrementaPomodoro(String token, UUID idTarefa) {
-		log.info("[inicia] TarefaRestController - buscaTodasSuasTarefa");
+		log.info("[inicia] TarefaRestController - patchIncrementaPomodoro");
 		String usuario = getUsuarioByToken(token);
 		tarefaService.patchIncrementaPomodoro(usuario,idTarefa);
-		log.info("[finaliza] TarefaRestController - detalhaTarefa");
+		log.info("[finaliza] TarefaRestController - patchIncrementaPomodoro");
 
 	}
 
