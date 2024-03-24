@@ -3,6 +3,7 @@ package dev.wakandaacademy.produdoro;
 import java.util.List;
 import java.util.UUID;
 
+import dev.wakandaacademy.produdoro.autenticacao.domain.Token;
 import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
