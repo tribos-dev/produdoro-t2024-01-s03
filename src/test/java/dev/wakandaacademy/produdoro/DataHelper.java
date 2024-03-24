@@ -25,6 +25,7 @@ public class DataHelper {
                 .idUsuario(usuario1).descricao("descricao tarefa").statusAtivacao(StatusAtivacaoTarefa.INATIVA).build();
     }
 
+
     public static UsuarioNovoRequest getUsuarioRequest() {
         UsuarioNovoRequest userReq = new UsuarioNovoRequest("email@email.com", "12345");
         return userReq;
