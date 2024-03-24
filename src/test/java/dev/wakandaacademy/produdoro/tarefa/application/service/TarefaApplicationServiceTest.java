@@ -3,7 +3,7 @@ package dev.wakandaacademy.produdoro.tarefa.application.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,13 +76,25 @@ class TarefaApplicationServiceTest {
         assertNotNull(excecao);
         assertEquals(HttpStatus.UNAUTHORIZED, excecao.getStatusException());
         assertEquals("Credencial de autenticacao nao e valida",excecao.getMessage());
-
-
     }
 
 
     public TarefaRequest getTarefaRequest() {
         TarefaRequest request = new TarefaRequest("tarefa 1", UUID.randomUUID(), null, null, 0);
         return request;
+    }
+
+
+    @Test
+    void deveDeletarTodasAsTarefas(){
+        Usuario usuario = DataHelper.createUsuario();
+        List<Tarefa> tarefas = DataHelper.createListTarefa();
+
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        tarefaApplicationService.deletaTodasTarefas(usuario.getEmail(), usuario.getIdUsuario());
+
+        verify(usuarioRepository, times(1)).buscaUsuarioPorEmail(usuario.getEmail());
+        verify(usuarioRepository, times(1)).buscaUsuarioPorId(usuario.getIdUsuario());
+        verify(tarefaRepository, times(1)).deletaTodasTarefas(usuario.getIdUsuario());
     }
 }
