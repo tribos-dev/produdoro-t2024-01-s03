@@ -3,10 +3,11 @@ package dev.wakandaacademy.produdoro.tarefa.application.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import dev.wakandaacademy.produdoro.DataHelper;
@@ -35,6 +36,7 @@ class TarefaApplicationServiceTest {
     //	@Autowired
     @InjectMocks
     TarefaApplicationService tarefaApplicationService;
+
 
     //	@MockBean
     @Mock
@@ -75,9 +77,31 @@ class TarefaApplicationServiceTest {
         APIException excecao = assertThrows(APIException.class, () -> tarefaApplicationService.buscaTodasSuasTarefa(usuario, UUID.randomUUID()));
         assertNotNull(excecao);
         assertEquals(HttpStatus.UNAUTHORIZED, excecao.getStatusException());
-        assertEquals("Credencial de autenticacao nao e valida",excecao.getMessage());
+        assertEquals("Credencial de autenticacao nao e valida", excecao.getMessage());
 
 
+    }
+
+    @Test
+    void deveRetornarTarefaPomodoroIncrementado() {
+        Usuario usuario = DataHelper.createUsuario();
+        Tarefa tarefa = DataHelper.createTarefa();
+        when(usuarioRepository.buscaUsuarioPorEmail(anyString())).thenReturn(usuario);
+        when(tarefaRepository.buscaTarefaPorId(tarefa.getIdTarefa())).thenReturn(Optional.of(tarefa));
+        tarefaApplicationService.patchIncrementaPomodoro(usuario.getEmail(), tarefa.getIdTarefa());
+        verify(tarefaRepository, times(1)).salva(tarefa);
+
+    }
+
+    @Test
+    void deveRetornarExceptionTarefaPomodorIncrementado() {
+        String usuario = DataHelper.createUsuario().getEmail();
+        UUID idTarefaInvalida = DataHelper.createTarefa().getIdTarefa();
+        when(usuarioRepository.buscaUsuarioPorEmail(anyString())).thenReturn(DataHelper.createUsuario());
+        APIException excecao = assertThrows(APIException.class, () -> tarefaApplicationService.patchIncrementaPomodoro(usuario, idTarefaInvalida));
+        assertNotNull(excecao);
+        assertEquals(HttpStatus.NOT_FOUND, excecao.getStatusException());
+        assertEquals("Tarefa não encontrada!", excecao.getMessage());
     }
 
 
