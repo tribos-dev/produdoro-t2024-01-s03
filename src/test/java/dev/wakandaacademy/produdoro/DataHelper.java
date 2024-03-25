@@ -6,10 +6,13 @@ import java.util.UUID;
 import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
+import dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 import dev.wakandaacademy.produdoro.usuario.application.api.UsuarioNovoRequest;
 import dev.wakandaacademy.produdoro.usuario.domain.StatusUsuario;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
+
+import static dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa.CONCLUIDA;
 
 public class DataHelper {
 
@@ -54,6 +57,17 @@ public class DataHelper {
                 Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 4").idUsuario(usuario1).build(),
                 Tarefa.builder().build()
 
+        );
+    }
+    public static List<Tarefa> createListTarefasConcluidas(Usuario usuario) {
+        return List.of(Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 1").idUsuario(usuario.getIdUsuario()).
+                        status(StatusTarefa.A_FAZER).build(),
+                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 2").idUsuario(usuario.getIdUsuario())
+                        .status(CONCLUIDA).build(),
+                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 3").idUsuario(usuario.getIdUsuario())
+                        .status(StatusTarefa.A_FAZER).build(),
+                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 4").idUsuario(usuario.getIdUsuario())
+                        .status(CONCLUIDA).build()
         );
     }
 }
