@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
+import dev.wakandaacademy.produdoro.tarefa.application.api.NovaPosicaoDaTarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa;
@@ -24,7 +25,7 @@ public class DataHelper {
 
     public static Tarefa createTarefa() {
         return Tarefa.builder().contagemPomodoro(1).idTarefa(UUID.fromString("06fb5521-9d5a-461a-82fb-e67e3bedc6eb"))
-                .idUsuario(usuario1).descricao("descricao tarefa").statusAtivacao(StatusAtivacaoTarefa.INATIVA).build();
+                .idUsuario(usuario1).descricao("descricao tarefa").statusAtivacao(StatusAtivacaoTarefa.INATIVA).posicao(0).build();
     }
 
 
@@ -67,5 +68,9 @@ public class DataHelper {
                 Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 4").idUsuario(usuario.getIdUsuario())
                         .status(CONCLUIDA).build()
         );
+    }
+
+    public static NovaPosicaoDaTarefaRequest createNovaPosicao(int novaPosicao) {
+        return new NovaPosicaoDaTarefaRequest(novaPosicao);
     }
 }

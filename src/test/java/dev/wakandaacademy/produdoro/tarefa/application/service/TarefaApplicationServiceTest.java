@@ -2,13 +2,12 @@ package dev.wakandaacademy.produdoro.tarefa.application.service;
 
 import dev.wakandaacademy.produdoro.DataHelper;
 import dev.wakandaacademy.produdoro.handler.APIException;
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
+import dev.wakandaacademy.produdoro.tarefa.application.api.*;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,8 +27,11 @@ import dev.wakandaacademy.produdoro.DataHelper;
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
+import net.bytebuddy.agent.builder.AgentBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -69,7 +71,6 @@ class TarefaApplicationServiceTest {
 
     @Mock
     UsuarioRepository usuarioRepository;
-
 
     @Test
     void deveRetornarIdTarefaNovaCriada() {
@@ -181,4 +182,23 @@ class TarefaApplicationServiceTest {
         assertNotEquals(usuarioEmail, usuario.getEmail());
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatusException());
     }
+
+    @Test
+    void mudaOrdemDaTarefaTest() {
+        List<Tarefa> tarefas = DataHelper.createListTarefa();
+        Tarefa tarefa = DataHelper.createTarefa();
+        NovaPosicaoDaTarefaRequest novaPosicao = DataHelper.createNovaPosicao(1);
+        Usuario usuario = DataHelper.createUsuario();
+
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        when(tarefaRepository.buscaTarefaPorId(any())).thenReturn(Optional.of(tarefa));
+        when(tarefaRepository.buscaTodasAsTarefasDoUsuario(tarefa.getIdUsuario())).thenReturn(tarefas);
+
+        // Given
+        tarefaApplicationService.mudaOrdemDaTarefa(usuario.getEmail(), tarefa.getIdTarefa(), novaPosicao);
+
+        // Then
+        verify(tarefaRepository, times(1)).defineNovaPosicaoDaTarefa(tarefa, tarefas, novaPosicao);
+    }
+
 }
