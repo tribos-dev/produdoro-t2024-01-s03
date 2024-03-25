@@ -9,13 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-<<<<<<< HEAD
-import static org.mockito.Mockito.*;
-=======
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
->>>>>>> dev
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +56,7 @@ class TarefaApplicationServiceTest {
 
     @Mock
     UsuarioRepository usuarioRepository;
-    
+
     @Test
     void deveRetornarIdTarefaNovaCriada() {
         TarefaRequest request = getTarefaRequest();
@@ -89,20 +85,13 @@ class TarefaApplicationServiceTest {
     void deveRetornarExceptionDaListaDeTarefa() {
         String usuario = DataHelper.createUsuario().getEmail();
         when(usuarioRepository.buscaUsuarioPorEmail(anyString())).thenReturn(DataHelper.createUsuario());
-
         APIException excecao = assertThrows(APIException.class, () -> tarefaApplicationService.buscaTodasSuasTarefa(usuario, UUID.randomUUID()));
         assertNotNull(excecao);
         assertEquals(HttpStatus.UNAUTHORIZED, excecao.getStatusException());
-<<<<<<< HEAD
-        assertEquals("Credencial de autenticacao nao e valida", excecao.getMessage());
-=======
         assertEquals("Credencial de autenticação não é válida!", excecao.getMessage());
->>>>>>> dev
-
-
     }
 
-<<<<<<< HEAD
+
     @Test
     void deveRetornarTarefaPomodoroIncrementado() {
         Usuario usuario = DataHelper.createUsuario();
@@ -125,30 +114,25 @@ class TarefaApplicationServiceTest {
         assertEquals("Tarefa não encontrada!", excecao.getMessage());
     }
 
-
-=======
->>>>>>> dev
     public TarefaRequest getTarefaRequest() {
         TarefaRequest request = new TarefaRequest("tarefa 1", UUID.randomUUID(), null, null, 0);
         return request;
     }
 
     @Test
-    void testDeletaTarefa(){
+    void testDeletaTarefa() {
         UUID idTarefa = UUID.randomUUID();
         String usuario = "usuario@exemplo.com";
         Usuario usuarioMock = DataHelper.createUsuario();
         Tarefa tarefaMock = DataHelper.createTarefa();
-
         when(usuarioRepository.buscaUsuarioPorEmail(usuario)).thenReturn(usuarioMock);
         when(tarefaRepository.buscaTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefaMock));
         tarefaApplicationService.deletaTarefa(usuario, idTarefa);
-
         verify(tarefaRepository, times(1)).deletaTarefaPorId(tarefaMock);
     }
 
     @Test
-    void nãoDeveDeletarTarefa(){
+    void nãoDeveDeletarTarefa() {
         UUID idTarefa = UUID.fromString("385c48f2-49ab-485b-87b1-02d5de2f7710");
         String usuarioEmail = "exemplo@usuario.com";
         Usuario usuario = DataHelper.createUsuario();
@@ -160,25 +144,26 @@ class TarefaApplicationServiceTest {
         assertNotEquals(idTarefa, tarefa.getIdTarefa());
         assertNotEquals(usuarioEmail, usuario.getEmail());
         assertEquals(HttpStatus.NOT_FOUND, ex.getStatusException());
-    
+    }
+
     @Test
     public void deveConcluirTarefa() {
-    	Usuario usuario = DataHelper.createUsuario();
-    	Tarefa tarefa = DataHelper.createTarefa();
-    	when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
-    	when(tarefaRepository.buscaTarefaPorId(any())).thenReturn(Optional.of(tarefa));
-		tarefaApplicationService.concluiTarefa(usuario.getEmail(), tarefa.getIdTarefa());
-		assertEquals(tarefa.getStatus(), StatusTarefa.CONCLUIDA);
+        Usuario usuario = DataHelper.createUsuario();
+        Tarefa tarefa = DataHelper.createTarefa();
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        when(tarefaRepository.buscaTarefaPorId(any())).thenReturn(Optional.of(tarefa));
+        tarefaApplicationService.concluiTarefa(usuario.getEmail(), tarefa.getIdTarefa());
+        assertEquals(tarefa.getStatus(), StatusTarefa.CONCLUIDA);
     }
-    
+
     @Test
     public void naoConcluiTarefa() {
-		Usuario usuario = DataHelper.createUsuario();
-		Tarefa tarefa = DataHelper.createTarefa();
-		when(usuarioRepository.buscaUsuarioPorEmail(any())).thenThrow(APIException.class);
-		assertThrows(APIException.class,
-				() -> tarefaApplicationService.concluiTarefa("emailInvalido@gmail.com", tarefa.getIdTarefa()));
-	}
+        Usuario usuario = DataHelper.createUsuario();
+        Tarefa tarefa = DataHelper.createTarefa();
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenThrow(APIException.class);
+        assertThrows(APIException.class,
+                () -> tarefaApplicationService.concluiTarefa("emailInvalido@gmail.com", tarefa.getIdTarefa()));
+    }
 
     @Test
     void deletaTarefasConcluidas() {
@@ -193,6 +178,7 @@ class TarefaApplicationServiceTest {
         verify(usuarioRepository, times(1)).buscaUsuarioPorId(usuario.getIdUsuario());
         verify(tarefaRepository, times(1)).deletaTodasAsTarefasConcluidas(tarefasConcluidas);
     }
+
     @Test
     void validaUsuarioTest() {
         //cenario
