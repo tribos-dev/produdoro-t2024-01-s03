@@ -7,7 +7,7 @@ import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaReposito
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
-import lombok.Data;
+
 import lombok.extern.log4j.Log4j2;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,44 +18,25 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import dev.wakandaacademy.produdoro.DataHelper;
-import dev.wakandaacademy.produdoro.handler.APIException;
-import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
-import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
-import net.bytebuddy.agent.builder.AgentBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
 
-import dev.wakandaacademy.produdoro.DataHelper;
-import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
-import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
-import dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa;
-import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
-import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
-import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 
-import org.springframework.http.HttpStatus;
+import dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa;
 
 @ExtendWith(MockitoExtension.class)
 @Log4j2
@@ -185,6 +166,7 @@ class TarefaApplicationServiceTest {
 
     @Test
     void mudaOrdemDaTarefaTest() {
+        // Given
         List<Tarefa> tarefas = DataHelper.createListTarefa();
         Tarefa tarefa = DataHelper.createTarefa();
         NovaPosicaoDaTarefaRequest novaPosicao = DataHelper.createNovaPosicao(1);
@@ -194,11 +176,28 @@ class TarefaApplicationServiceTest {
         when(tarefaRepository.buscaTarefaPorId(any())).thenReturn(Optional.of(tarefa));
         when(tarefaRepository.buscaTodasAsTarefasDoUsuario(tarefa.getIdUsuario())).thenReturn(tarefas);
 
-        // Given
+        // When
         tarefaApplicationService.mudaOrdemDaTarefa(usuario.getEmail(), tarefa.getIdTarefa(), novaPosicao);
 
         // Then
         verify(tarefaRepository, times(1)).defineNovaPosicaoDaTarefa(tarefa, tarefas, novaPosicao);
+    }
+
+    @Test
+    void naoDeveMudarOrdemDaTarefa() {
+        // Given
+        Tarefa tarefaInexistente = DataHelper.createTarefa();
+        NovaPosicaoDaTarefaRequest novaPosicao = DataHelper.createNovaPosicao(1);
+        Usuario usuario = DataHelper.createUsuario();
+
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        when(tarefaRepository.buscaTarefaPorId(any())).thenReturn(Optional.empty());
+
+        // When
+        assertThrows(APIException.class, () -> tarefaApplicationService.mudaOrdemDaTarefa(usuario.getEmail(), tarefaInexistente.getIdTarefa(), novaPosicao));
+
+        // Then
+        verify(tarefaRepository, times(0)).defineNovaPosicaoDaTarefa(any(), any(), any());
     }
 
 }
