@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 
 import javax.validation.constraints.NotBlank;
 
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@Log4j2
 @Document(collection = "Tarefa")
 public class Tarefa {
 	@Id
@@ -54,5 +56,11 @@ public class Tarefa {
 		if(!this.idUsuario.equals(usuarioPorEmail.getIdUsuario())) {
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário não é dono da Tarefa solicitada!");
 		}
+	}
+
+	public void concluiTarefa() {
+		log.info("[inicia] Tarefa - concluiTarefa");
+		this.status = StatusTarefa.CONCLUIDA;
+		log.info("[finaliza] Tarefa - concluiTarefa");
 	}
 }
