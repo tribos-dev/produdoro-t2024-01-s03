@@ -89,8 +89,11 @@ public class TarefaApplicationService implements TarefaService {
 
 
     private void validaUsuario(String usuario, UUID idUsuario) {
+        log.info("[Inicia] - TarefaApplicationService - validaUsuario");
         Usuario usuarioValidado = usuarioRepository.buscaUsuarioPorEmail(usuario);
+        log.info("[Usuario] - {}", usuarioValidado);
         usuarioRepository.buscaUsuarioPorId(idUsuario);
         usuarioValidado.validaUsuario(idUsuario);
+        log.info("[finaliza] - TarefaApplicationService - validaUsuario");
     }
 }
