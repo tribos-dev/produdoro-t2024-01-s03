@@ -38,28 +38,39 @@ public class Usuario {
         this.status = StatusUsuario.FOCO;
         this.configuracao = new ConfiguracaoUsuario(configuracaoPadrao);
     }
-	public void validaSeUsuarioJaEstaEmFoco() {
-		if(this.status.equals(StatusUsuario.FOCO)) {
-			throw APIException.build(HttpStatus.BAD_REQUEST, "Usuário já esta em FOCO!");
-		}
-	}
-	public void mudaStatusParaFoco(UUID idUsuario) {
-		validaUsuario(idUsuario);
-		validaSeUsuarioJaEstaEmFoco();
-		this.status = StatusUsuario.FOCO;
-	}
+
+    public void validaSeUsuarioJaEstaEmFoco() {
+        log.info("[inicia] Usuario - validaSeUsuarioJaEstaEmFoco");
+        if (this.status.equals(StatusUsuario.FOCO)) {
+            log.info("[finaliza] APIException - validaSeUsuarioJaEstaEmFoco");
+            throw APIException.build(HttpStatus.BAD_REQUEST, "Usuário já esta em FOCO!");
+        }
+        log.info("[Finaliza] Usuario - validaSeUsuarioJaEstaEmFoco");
+    }
+
+    public void mudaStatusParaFoco(UUID idUsuario) {
+        log.info("[inicia] Usuario - mudaStatusParaFoco");
+        validaUsuario(idUsuario);
+        validaSeUsuarioJaEstaEmFoco();
+        this.status = StatusUsuario.FOCO;
+        log.info("[finaliza] Usuario - mudaStatusParaFoco");
+    }
+
     public void validaUsuario(UUID idUsuario) {
         log.info("[inicia] Usuario - validaUsuario");
         if (!this.idUsuario.equals(idUsuario)) {
-        log.info("[finaliza] Usuario - validaUsuario");
+            log.info("[finaliza] APIException - validaUsuario");
             throw APIException.build(HttpStatus.UNAUTHORIZED, "Credencial de autenticação não é válida!");
         }
         log.info("[finaliza] Usuario - validaUsuario");
     }
-	public void mudaStatusParaPausaLonga() {
-		log.info("[inicia] Usuario - mudaStatusParaPausaLonga");
-		this.status = StatusUsuario.PAUSA_LONGA;
-		log.info("[finaliza] Usuario - mudaStatusParaPausaLonga");
-		
-	}
+
+
+    public void mudaStatusParaPausaLonga() {
+        log.info("[inicia] Usuario - mudaStatusParaPausaLonga");
+        this.status = StatusUsuario.PAUSA_LONGA;
+        log.info("[finaliza] Usuario - mudaStatusParaPausaLonga");
+
+    }
 }
+
