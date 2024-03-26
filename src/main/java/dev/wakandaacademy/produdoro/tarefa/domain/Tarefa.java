@@ -2,24 +2,24 @@ package dev.wakandaacademy.produdoro.tarefa.domain;
 
 import java.util.UUID;
 
-import dev.wakandaacademy.produdoro.handler.APIException;
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
-import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
+import javax.validation.constraints.NotBlank;
 
-import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.HttpStatus;
 
+import dev.wakandaacademy.produdoro.handler.APIException;
+import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
+import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-
-import javax.validation.constraints.NotBlank;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -56,20 +56,38 @@ public class Tarefa {
 		this.posicao = posicaoDaNovaTarefa;
 	}
 
+	public void altera(EditaTarefaRequest tarefaRequest) {
+		this.descricao = tarefaRequest.getDescricao();
+	}
+
 	public void pertenceAoUsuario(Usuario usuarioPorEmail) {
-		if(!this.idUsuario.equals(usuarioPorEmail.getIdUsuario())) {
+		log.info("[inicia] Tarefa - pertenceAoUsuario");
+		if (!this.idUsuario.equals(usuarioPorEmail.getIdUsuario())) {
+			log.info("[Finaliza] APIException - pertenceAoUsuario");
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário não é dono da Tarefa solicitada!");
 		}
+		log.info("[Finaliza] Tarefa - pertenceAoUsuario");
 	}
-	public void incrementaPosicao(int tamanhoDaLista){
-		if (this.posicao < tamanhoDaLista - 1) this.posicao++;
+
+	public void incrementaPomodoro() {
+		log.info("[inicia] Tarefa - incrementaPomodoro");
+		this.contagemPomodoro++;
+		log.info("[finaliza] Tarefa - incrementaPomodoro");
 	}
-	public void decrementaPosicao(){
-		if (this.posicao > 0) this.posicao--;
-		}
+
 	public void concluiTarefa() {
 		log.info("[inicia] Tarefa - concluiTarefa");
 		this.status = StatusTarefa.CONCLUIDA;
 		log.info("[finaliza] Tarefa - concluiTarefa");
+	}
+
+	public void incrementaPosicao(int tamanhoDaLista) {
+		if (this.posicao < tamanhoDaLista - 1)
+			this.posicao++;
+	}
+
+	public void decrementaPosicao() {
+		if (this.posicao > 0)
+			this.posicao--;
 	}
 }
