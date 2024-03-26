@@ -1,17 +1,21 @@
 package dev.wakandaacademy.produdoro.usuario.domain;
 
+import java.util.UUID;
+import javax.validation.constraints.Email;
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
 import dev.wakandaacademy.produdoro.usuario.application.api.UsuarioNovoRequest;
-import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.HttpStatus;
-
-import javax.validation.constraints.Email;
-import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Builder
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -65,12 +69,14 @@ public class Usuario {
         log.info("[finaliza] Usuario - validaUsuario");
     }
 
+	public void mudaStatusParaPausaLonga() {
+		log.info("[inicia] Usuario - mudaStatusParaPausaLonga");
+		this.status = StatusUsuario.PAUSA_LONGA;
+		log.info("[finaliza] Usuario - mudaStatusParaPausaLonga");
+		
+	}
 
-    public void mudaStatusParaPausaLonga() {
-        log.info("[inicia] Usuario - mudaStatusParaPausaLonga");
-        this.status = StatusUsuario.PAUSA_LONGA;
-        log.info("[finaliza] Usuario - mudaStatusParaPausaLonga");
-
+    public void mudaStatusPausaCurta() {
+        this.status = StatusUsuario.PAUSA_CURTA;
     }
 }
-

@@ -54,4 +54,6 @@ public interface TarefaAPI {
     void deletaTrefasConcluidas(@RequestHeader(name = "Authorization", required = true) String token,
                                 @PathVariable UUID idUsuario);
 
+
+
 }
