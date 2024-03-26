@@ -57,7 +57,9 @@ public class Tarefa {
 	}
 
 	public void altera(EditaTarefaRequest tarefaRequest) {
+		log.info("[inicia] Tarefa - altera");
 		this.descricao = tarefaRequest.getDescricao();
+		log.info("[finaliza] Tarefa - altera");
 	}
 
 	public void pertenceAoUsuario(Usuario usuarioPorEmail) {
@@ -66,7 +68,7 @@ public class Tarefa {
 			log.info("[Finaliza] APIException - pertenceAoUsuario");
 			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário não é dono da Tarefa solicitada!");
 		}
-		log.info("[Finaliza] Tarefa - pertenceAoUsuario");
+		log.info("[finaliza] Tarefa - pertenceAoUsuario");
 	}
 
 	public void incrementaPomodoro() {
@@ -82,12 +84,16 @@ public class Tarefa {
 	}
 
 	public void incrementaPosicao(int tamanhoDaLista) {
+		log.info("[inicia] Tarefa - incrementaPosicao");
 		if (this.posicao < tamanhoDaLista - 1)
 			this.posicao++;
+		log.info("[finaliza] Tarefa - incrementaPosicao");
 	}
 
 	public void decrementaPosicao() {
+		log.info("[inicia] Tarefa - decrementaPosicao");
 		if (this.posicao > 0)
 			this.posicao--;
+		log.info("[finaliza] Tarefa - decrementaPosicao");
 	}
 }
