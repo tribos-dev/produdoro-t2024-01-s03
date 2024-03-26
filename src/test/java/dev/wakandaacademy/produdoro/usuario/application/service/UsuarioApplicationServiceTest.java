@@ -3,6 +3,7 @@ package dev.wakandaacademy.produdoro.usuario.application.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -91,5 +92,26 @@ class UsuarioApplicationServiceTest {
 		assertEquals(APIException.class, ex.getClass());
 		assertEquals(HttpStatus.UNAUTHORIZED, ex.getStatusException());
 		assertEquals("Credencial de autenticação não é válida!", ex.getMessage());
+	}
+
+	@Test
+	void deveMudarStatusParaPausaCurta() {
+		Usuario usuario = DataHelper.createUsuario();
+		when(usuarioRepository.buscaUsuarioPorEmail(anyString())).thenReturn(usuario);
+		usuarioApplicationService.mudaStatusPausaCurta(usuario.getIdUsuario(), usuario.getEmail());
+		verify(usuarioRepository, times(1)).buscaUsuarioPorId(any());
+		verify(usuarioRepository, times(1)).buscaUsuarioPorEmail(any());
+		verify(usuarioRepository, times(1)).salva(any());
+		assertEquals(StatusUsuario.PAUSA_CURTA, usuario.getStatus());
+	}
+
+	@Test
+	void naoDeveMudarStatusParaPausaCurta() {
+		Usuario usuario = DataHelper.createUsuario();
+		UUID idUsuario = UUID.fromString("b92ee6fa-9ae9-45ac-afe0-fb8e4460d839");
+		when(usuarioRepository.buscaUsuarioPorEmail(anyString())).thenReturn(usuario);
+		APIException e = assertThrows(APIException.class,
+				() -> usuarioApplicationService.mudaStatusPausaCurta(idUsuario, usuario.getEmail()));
+		assertEquals(HttpStatus.UNAUTHORIZED, e.getStatusException());
 	}
 }
