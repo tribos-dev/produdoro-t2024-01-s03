@@ -25,7 +25,7 @@ import lombok.ToString;
 @Document(collection = "Usuario")
 @Log4j2
 public class Usuario {
-    @Id
+   @Id
     private UUID idUsuario;
     @Email
     @Indexed(unique = true)
@@ -68,6 +68,7 @@ public class Usuario {
         }
         log.info("[finaliza] Usuario - validaUsuario");
     }
+
 
 	public void mudaStatusParaPausaLonga() {
 		log.info("[inicia] Usuario - mudaStatusParaPausaLonga");

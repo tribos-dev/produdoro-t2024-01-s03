@@ -44,6 +44,16 @@ public class TarefaApplicationService implements TarefaService {
     }
 
     @Override
+    public void deletaTodasTarefas(String emailUsuario, UUID idUsuario) {
+        log.info("[inicia] TarefaApplicationService - deletaTodasTarefas");
+        Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(emailUsuario);
+        usuarioRepository.buscaUsuarioPorId(idUsuario);
+        usuario.validaUsuario(idUsuario);
+        tarefaRepository.deletaTodasTarefas(idUsuario);
+        log.info("[finaliza] TarefaApplicationService - deletaTodasTarefas");
+    }
+
+    @Override
     public void deletaTarefa(String usuario, UUID idTarefa) {
         log.info("[inicia] TarefaApplicationService - deletaTarefa");
         tarefaRepository.deletaTarefaPorId(detalhaTarefa(usuario, idTarefa));
@@ -77,7 +87,6 @@ public class TarefaApplicationService implements TarefaService {
         return TarefaDetalhadoResponse.converte(tarefaList);
     }
 
-
     @Override
     public void patchIncrementaPomodoro(String usuario, UUID idTarefa) {
         log.info("[inicial] - TarefaApplicationService - patchIncrementaPomodoro");
@@ -86,7 +95,6 @@ public class TarefaApplicationService implements TarefaService {
         tarefaRepository.salva(tarefa);
         log.info("[finaliza] - TarefaApplicationService - patchIncrementaPomodoro");
     }
-
 
     private void validaUsuario(String usuario, UUID idUsuario) {
         log.info("[Inicia] - TarefaApplicationService - validaUsuario");
