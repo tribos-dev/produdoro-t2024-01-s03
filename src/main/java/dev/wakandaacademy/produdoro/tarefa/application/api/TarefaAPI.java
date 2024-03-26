@@ -28,8 +28,8 @@ public interface TarefaAPI {
 
     @GetMapping("/{idTarefa}")
     @ResponseStatus(code = HttpStatus.OK)
-    TarefaDetalhadoResponse detalhaTarefa(@RequestHeader(name = "Authorization", required = true) String token,
-                                          @PathVariable UUID idTarefa);
+    TarefaDetalhadoResponse detalhaTarefa(@RequestHeader(name = "Authorization",required = true) String token,
+    		@PathVariable UUID idTarefa);
 
     @GetMapping("/listaTarefas/{idUsuario}")
     @ResponseStatus(code = HttpStatus.OK)
@@ -38,7 +38,6 @@ public interface TarefaAPI {
     @PatchMapping("/incrementaPomodoro/{idTarefa}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     void patchIncrementaPomodoro(@RequestHeader(name = "Authorization", required = true) String token, @PathVariable UUID idTarefa);
-
 
     @PatchMapping("/concluiTarefa/{idTarefa}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
@@ -55,9 +54,14 @@ public interface TarefaAPI {
                                 @PathVariable UUID idUsuario);
 
 
+    @PatchMapping("/editaTarefa/{idTarefa}")
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    void editaTarefa(@RequestHeader(name = "Authorization",required = true) String token,
+                     @PathVariable UUID idTarefa,
+                     @RequestBody @Valid EditaTarefaRequest tarefaRequest);
+
     @DeleteMapping("/deletaTodasTarefas/{idUsuario}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     void deletaTodasTarefas(@RequestHeader(name = "Authorization",required = true) String token,
                             @PathVariable UUID idUsuario);
-
 }

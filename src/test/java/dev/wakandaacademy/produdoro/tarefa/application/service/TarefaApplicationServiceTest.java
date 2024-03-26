@@ -2,10 +2,14 @@ package dev.wakandaacademy.produdoro.tarefa.application.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+<<<<<<< HEAD
+import static org.mockito.Mockito.*;
+=======
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+>>>>>>> dev
 import static org.mockito.ArgumentMatchers.anyString;
 <<<<<<< HEAD
 import static org.mockito.Mockito.*;
@@ -21,15 +25,26 @@ import java.util.Optional;
 import java.util.UUID;
 import dev.wakandaacademy.produdoro.DataHelper;
 import dev.wakandaacademy.produdoro.handler.APIException;
+<<<<<<< HEAD
+import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
 import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
+import lombok.extern.log4j.Log4j2;
+=======
+import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
+import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
+>>>>>>> dev
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+<<<<<<< HEAD
+=======
 import org.springframework.http.HttpStatus;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
+>>>>>>> dev
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
@@ -74,7 +89,6 @@ class TarefaApplicationServiceTest {
         List<TarefaDetalhadoResponse> tarefaDetalhadoResponse = tarefaApplicationService.buscaTodasSuasTarefa(usuario, idUsuario);
         assertNotNull(tarefaDetalhadoResponse);
         assertTrue(tarefaDetalhadoResponse.size() > 1);
-
     }
 
     @Test
@@ -86,6 +100,11 @@ class TarefaApplicationServiceTest {
         assertEquals(HttpStatus.UNAUTHORIZED, excecao.getStatusException());
 <<<<<<< HEAD
         assertEquals("Credencial de autenticacao nao e valida",excecao.getMessage());
+<<<<<<< HEAD
+    }
+
+=======
+>>>>>>> dev
 =======
         assertEquals("Credencial de autenticação não é válida!", excecao.getMessage());
     }
@@ -114,6 +133,7 @@ class TarefaApplicationServiceTest {
         assertEquals("Tarefa não encontrada!", excecao.getMessage());
     }
 
+>>>>>>> dev
     public TarefaRequest getTarefaRequest() {
         TarefaRequest request = new TarefaRequest("tarefa 1", UUID.randomUUID(), null, null, 0);
         return request;
@@ -134,6 +154,35 @@ class TarefaApplicationServiceTest {
         verify(tarefaRepository, times(1)).deletaTodasTarefas(usuario.getIdUsuario());
 =======
     @Test
+<<<<<<< HEAD
+    void deveEditarTarefa(){
+        //dado
+        Usuario usuario = DataHelper.createUsuario();
+        Tarefa tarefa = DataHelper.createTarefa();
+        EditaTarefaRequest editaTarefaRequest = DataHelper.createEditaTarefa();
+        //quando
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        when(tarefaRepository.buscaTarefaPorId(any())).thenReturn(Optional.of(tarefa));
+        tarefaApplicationService.editaTarefa(usuario.getEmail(),tarefa.getIdTarefa(), editaTarefaRequest);
+        //entao
+        verify(usuarioRepository, times(1)).buscaUsuarioPorEmail(usuario.getEmail());
+        verify(tarefaRepository, times(1)).buscaTarefaPorId(tarefa.getIdTarefa());
+        assertEquals("TAREFA 2", tarefa.getDescricao());
+    }
+
+    @Test
+    void deveNaoEditarTarefa_QuandoPassarIdTarefaInvalido(){
+        UUID idTarefaInvalido = UUID.randomUUID();
+        String usuario = "Joao";
+        EditaTarefaRequest editaTarefaRequest = DataHelper.createEditaTarefa();
+
+        when(tarefaRepository.buscaTarefaPorId(idTarefaInvalido)).thenReturn(Optional.empty());
+        assertThrows(APIException.class,() -> tarefaApplicationService.editaTarefa(usuario, idTarefaInvalido, editaTarefaRequest));
+
+        verify(tarefaRepository, times(1)).buscaTarefaPorId(idTarefaInvalido);
+    }
+
+=======
     void testDeletaTarefa() {
         UUID idTarefa = UUID.randomUUID();
         String usuario = "usuario@exemplo.com";
@@ -207,4 +256,5 @@ class TarefaApplicationServiceTest {
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
 >>>>>>> dev
     }
+>>>>>>> dev
 }
