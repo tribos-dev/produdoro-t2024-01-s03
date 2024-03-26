@@ -11,9 +11,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 >>>>>>> dev
 import static org.mockito.ArgumentMatchers.anyString;
+<<<<<<< HEAD
+import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
+=======
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+>>>>>>> dev
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -94,8 +100,11 @@ class TarefaApplicationServiceTest {
         assertEquals(HttpStatus.UNAUTHORIZED, excecao.getStatusException());
 <<<<<<< HEAD
         assertEquals("Credencial de autenticacao nao e valida",excecao.getMessage());
+<<<<<<< HEAD
     }
 
+=======
+>>>>>>> dev
 =======
         assertEquals("Credencial de autenticação não é válida!", excecao.getMessage());
     }
@@ -110,6 +119,7 @@ class TarefaApplicationServiceTest {
         tarefaApplicationService.patchIncrementaPomodoro(usuario.getEmail(), tarefa.getIdTarefa());
         verify(tarefaRepository, times(1)).salva(tarefa);
 
+>>>>>>> dev
     }
 
     @Test
@@ -129,6 +139,20 @@ class TarefaApplicationServiceTest {
         return request;
     }
 
+<<<<<<< HEAD
+
+    @Test
+    void deveDeletarTodasAsTarefas(){
+        Usuario usuario = DataHelper.createUsuario();
+        List<Tarefa> tarefas = DataHelper.createListTarefa();
+
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        tarefaApplicationService.deletaTodasTarefas(usuario.getEmail(), usuario.getIdUsuario());
+
+        verify(usuarioRepository, times(1)).buscaUsuarioPorEmail(usuario.getEmail());
+        verify(usuarioRepository, times(1)).buscaUsuarioPorId(usuario.getIdUsuario());
+        verify(tarefaRepository, times(1)).deletaTodasTarefas(usuario.getIdUsuario());
+=======
     @Test
 <<<<<<< HEAD
     void deveEditarTarefa(){
@@ -230,6 +254,7 @@ class TarefaApplicationServiceTest {
         //verificacao
         assertEquals("Credencial de autenticação não é válida!", exception.getMessage());
         assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
+>>>>>>> dev
     }
 >>>>>>> dev
 }

@@ -12,6 +12,7 @@ import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,6 +55,16 @@ public class TarefaApplicationService implements TarefaService {
     }
 
     @Override
+    public void deletaTodasTarefas(String emailUsuario, UUID idUsuario) {
+        log.info("[inicia] TarefaApplicationService - deletaTodasTarefas");
+        Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(emailUsuario);
+        usuarioRepository.buscaUsuarioPorId(idUsuario);
+        usuario.validaUsuario(idUsuario);
+        tarefaRepository.deletaTodasTarefas(idUsuario);
+        log.info("[finaliza] TarefaApplicationService - deletaTodasTarefas");
+    }
+
+    @Override
     public void deletaTarefa(String usuario, UUID idTarefa) {
         log.info("[inicia] TarefaApplicationService - deletaTarefa");
         tarefaRepository.deletaTarefaPorId(detalhaTarefa(usuario, idTarefa));
@@ -86,7 +97,6 @@ public class TarefaApplicationService implements TarefaService {
         log.info("[finaliza] - TarefaApplicationService - buscaTodasSuasTarefa");
         return TarefaDetalhadoResponse.converte(tarefaList);
     }
-
 
     @Override
     public void patchIncrementaPomodoro(String usuario, UUID idTarefa) {
