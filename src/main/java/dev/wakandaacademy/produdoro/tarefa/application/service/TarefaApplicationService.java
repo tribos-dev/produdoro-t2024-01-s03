@@ -24,7 +24,6 @@ public class TarefaApplicationService implements TarefaService {
     private final TarefaRepository tarefaRepository;
     private final UsuarioRepository usuarioRepository;
 
-
     @Override
     public TarefaIdResponse criaNovaTarefa(TarefaRequest tarefaRequest) {
         log.info("[inicia] TarefaApplicationService - criaNovaTarefa");
@@ -55,6 +54,31 @@ public class TarefaApplicationService implements TarefaService {
     }
 
     @Override
+    public void deletaTarefa(String usuario, UUID idTarefa) {
+        log.info("[inicia] TarefaApplicationService - deletaTarefa");
+        tarefaRepository.deletaTarefaPorId(detalhaTarefa(usuario, idTarefa));
+        log.info("[finaliza] TarefaApplicationService - deletaTarefa");
+    }
+
+    @Override
+    public void concluiTarefa(String usuario, UUID idTarefa) {
+        log.info("[inicia] TarefaApplicationService - concluiTarefa");
+        Tarefa tarefa = detalhaTarefa(usuario, idTarefa);
+        tarefa.concluiTarefa();
+        tarefaRepository.salva(tarefa);
+        log.info("[finaliza] TarefaApplicationService - concluiTarefa");
+    }
+
+    @Override
+    public void deletaTarefasConcluidas(String usuario, UUID idUsuario) {
+        log.info("[inicia] TarefaApplicationService - deletaTarefasConcluidas");
+        validaUsuario(usuario, idUsuario);
+        List<Tarefa> tarefasConcluidas = tarefaRepository.buscaTarefasConcluidasDoUsuario();
+        tarefaRepository.deletaTodasAsTarefasConcluidas(tarefasConcluidas);
+        log.info("[finaliza] TarefaApplicationService - deletaTarefasConcluidas");
+    }
+
+    @Override
     public List<TarefaDetalhadoResponse> buscaTodasSuasTarefa(String usuario, UUID idUsuario) {
         log.info("[inicial] - TarefaApplicationService - buscaTodasSuasTarefa");
         validaUsuario(usuario, idUsuario);
@@ -63,9 +87,22 @@ public class TarefaApplicationService implements TarefaService {
         return TarefaDetalhadoResponse.converte(tarefaList);
     }
 
+
+    @Override
+    public void patchIncrementaPomodoro(String usuario, UUID idTarefa) {
+        log.info("[inicial] - TarefaApplicationService - patchIncrementaPomodoro");
+        Tarefa tarefa = detalhaTarefa(usuario, idTarefa);
+        tarefa.incrementaPomodoro();
+        tarefaRepository.salva(tarefa);
+        log.info("[finaliza] - TarefaApplicationService - patchIncrementaPomodoro");
+    }
+
     private void validaUsuario(String usuario, UUID idUsuario) {
+        log.info("[Inicia] - TarefaApplicationService - validaUsuario");
         Usuario usuarioValidado = usuarioRepository.buscaUsuarioPorEmail(usuario);
+        log.info("[Usuario] - {}", usuarioValidado);
         usuarioRepository.buscaUsuarioPorId(idUsuario);
         usuarioValidado.validaUsuario(idUsuario);
+        log.info("[finaliza] - TarefaApplicationService - validaUsuario");
     }
 }

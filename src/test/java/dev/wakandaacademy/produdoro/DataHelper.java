@@ -3,14 +3,18 @@ package dev.wakandaacademy.produdoro;
 import java.util.List;
 import java.util.UUID;
 
+import dev.wakandaacademy.produdoro.autenticacao.domain.Token;
 import dev.wakandaacademy.produdoro.pomodoro.domain.ConfiguracaoPadrao;
 import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
+import dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
 import dev.wakandaacademy.produdoro.usuario.application.api.UsuarioNovoRequest;
 import dev.wakandaacademy.produdoro.usuario.domain.StatusUsuario;
 import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
+
+import static dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa.CONCLUIDA;
 
 public class DataHelper {
 
@@ -24,6 +28,8 @@ public class DataHelper {
         return Tarefa.builder().contagemPomodoro(1).idTarefa(UUID.fromString("06fb5521-9d5a-461a-82fb-e67e3bedc6eb"))
                 .idUsuario(usuario1).descricao("descricao tarefa").statusAtivacao(StatusAtivacaoTarefa.INATIVA).build();
     }
+
+
 
 
     public static UsuarioNovoRequest getUsuarioRequest() {
@@ -55,9 +61,22 @@ public class DataHelper {
 
         );
     }
+<<<<<<< HEAD
 
     public static EditaTarefaRequest createEditaTarefa() {
         EditaTarefaRequest editaTarefaRequest = new EditaTarefaRequest("TAREFA 2");
         return editaTarefaRequest;
+=======
+    public static List<Tarefa> createListTarefasConcluidas(Usuario usuario) {
+        return List.of(Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 1").idUsuario(usuario.getIdUsuario()).
+                        status(StatusTarefa.A_FAZER).build(),
+                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 2").idUsuario(usuario.getIdUsuario())
+                        .status(CONCLUIDA).build(),
+                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 3").idUsuario(usuario.getIdUsuario())
+                        .status(StatusTarefa.A_FAZER).build(),
+                Tarefa.builder().idTarefa(UUID.randomUUID()).descricao("tarefa 4").idUsuario(usuario.getIdUsuario())
+                        .status(CONCLUIDA).build()
+        );
+>>>>>>> dev
     }
 }
