@@ -28,4 +28,7 @@ public interface UsuarioAPI {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	void mudaStatusPausaLonga(@RequestHeader(name = "Authorization", required = true) String token,
 			@PathVariable UUID idUsuario);
+	
+	
+	
 }
