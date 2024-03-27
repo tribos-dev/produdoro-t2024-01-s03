@@ -8,7 +8,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.http.HttpStatus;
-
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
@@ -56,19 +55,23 @@ public class Tarefa {
 		this.posicao = posicaoDaNovaTarefa;
 	}
 
+	public void ativaTarefa() {
+		this.statusAtivacao = StatusAtivacaoTarefa.ATIVA;
+	}
+
+    public void pertenceAoUsuario(Usuario usuarioPorEmail) {
+        log.info("[inicia] Tarefa - pertenceAoUsuario");
+        if (!this.idUsuario.equals(usuarioPorEmail.getIdUsuario())) {
+            log.info("[Finaliza] APIException - pertenceAoUsuario");
+            throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário não é dono da Tarefa solicitada!");
+        }
+        log.info("[Finaliza] Tarefa - pertenceAoUsuario");
+    }
+
 	public void altera(EditaTarefaRequest tarefaRequest) {
 		log.info("[inicia] Tarefa - altera");
 		this.descricao = tarefaRequest.getDescricao();
 		log.info("[finaliza] Tarefa - altera");
-	}
-
-	public void pertenceAoUsuario(Usuario usuarioPorEmail) {
-		log.info("[inicia] Tarefa - pertenceAoUsuario");
-		if (!this.idUsuario.equals(usuarioPorEmail.getIdUsuario())) {
-			log.info("[Finaliza] APIException - pertenceAoUsuario");
-			throw APIException.build(HttpStatus.UNAUTHORIZED, "Usuário não é dono da Tarefa solicitada!");
-		}
-		log.info("[finaliza] Tarefa - pertenceAoUsuario");
 	}
 
 	public void incrementaPomodoro() {

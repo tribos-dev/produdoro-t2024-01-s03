@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import dev.wakandaacademy.produdoro.config.security.service.TokenService;
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.service.TarefaService;
@@ -34,6 +33,14 @@ public class TarefaRestController implements TarefaAPI {
 		Tarefa tarefa = tarefaService.detalhaTarefa(usuario, idTarefa);
 		log.info("[finaliza] TarefaRestController - detalhaTarefa");
 		return new TarefaDetalhadoResponse(tarefa);
+	}
+
+	@Override
+	public void ativaTarefa(String token, UUID idTarefa) {
+		log.info("[inicia] TarefaRestController - tarefaAtiva");
+		String emailUsuario = getUsuarioByToken(token);
+		tarefaService.ativaTarefa(idTarefa, emailUsuario);
+		log.info("[finaliza] TarefaRestController - tarefaAtiva");
 	}
 
 	@Override
@@ -102,6 +109,13 @@ public class TarefaRestController implements TarefaAPI {
 		return tarefaDetalhada;
 	}
 
+    public void deletaTrefasConcluidas(String token, UUID idUsuario) {
+		log.info("[inicia] TarefaRestController - deletaTrefasConcluidas");
+		String usuario = getUsuarioByToken(token);
+		tarefaService.deletaTarefasConcluidas(usuario,idUsuario);
+		log.info("[finaliza] TarefaRestController - deletaTrefasConcluidas");
+    }
+
 	private String getUsuarioByToken(String token) {
 		log.debug("[token] {}", token);
 		String usuario = tokenService.getUsuarioByBearerToken(token)
@@ -109,5 +123,4 @@ public class TarefaRestController implements TarefaAPI {
 		log.info("[usuario] {}", usuario);
 		return usuario;
 	}
-
 }

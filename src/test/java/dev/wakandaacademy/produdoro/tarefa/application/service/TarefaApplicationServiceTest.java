@@ -10,30 +10,28 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
+import dev.wakandaacademy.produdoro.DataHelper;
+import dev.wakandaacademy.produdoro.handler.APIException;
+import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
+import dev.wakandaacademy.produdoro.tarefa.domain.StatusAtivacaoTarefa;
+import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
+import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
-
-import dev.wakandaacademy.produdoro.DataHelper;
-import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.api.NovaPosicaoDaTarefaRequest;
-import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaDetalhadoResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaIdResponse;
 import dev.wakandaacademy.produdoro.tarefa.application.api.TarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.repository.TarefaRepository;
 import dev.wakandaacademy.produdoro.tarefa.domain.StatusTarefa;
 import dev.wakandaacademy.produdoro.tarefa.domain.Tarefa;
-import dev.wakandaacademy.produdoro.usuario.application.repository.UsuarioRepository;
-import dev.wakandaacademy.produdoro.usuario.domain.Usuario;
 
 @ExtendWith(MockitoExtension.class)
 class TarefaApplicationServiceTest {
@@ -126,19 +124,39 @@ class TarefaApplicationServiceTest {
 		verify(tarefaRepository, times(1)).deletaTodasAsTarefasConcluidas(tarefas);
 	}
 
-	@Test
-	void validaUsuarioTest() {
-		// cenario
+    @Test
+    void deveAtivarTarefa() {
+        Usuario usuario = DataHelper.createUsuario();
+        Tarefa tarefa = DataHelper.createTarefa();
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        when(tarefaRepository.buscaTarefaPorId(any())).thenReturn(Optional.ofNullable(tarefa));
+        tarefaApplicationService.ativaTarefa(tarefa.getIdTarefa(), usuario.getEmail());
+        verify(usuarioRepository, times(2)).buscaUsuarioPorEmail(any());
+        verify(tarefaRepository, times(1)).salva(any());
+        assertEquals(StatusAtivacaoTarefa.ATIVA, tarefa.getStatusAtivacao());
+    }
+
+    @Test
+    void naoDeveAtivarTarefa() {
 		Usuario usuario = DataHelper.createUsuario();
-		UUID idUsuarioInvalido = UUID.randomUUID(); // ID inválido de exemplo
+		UUID idTarefa = UUID.fromString("b92ee6fa-9ae9-45ac-afe0-fb8e4460d839");
 		when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
-		// acao
-		APIException exception = assertThrows(APIException.class,
-				() -> tarefaApplicationService.deletaTarefasConcluidas("emailinvalido@email.com", idUsuarioInvalido));
-		// verificacao
-		assertEquals("Credencial de autenticação não é válida!", exception.getMessage());
-		assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
+		APIException e = assertThrows(APIException.class,
+				() -> tarefaApplicationService.ativaTarefa(idTarefa, usuario.getEmail()));
+		assertEquals(HttpStatus.NOT_FOUND, e.getStatusException());
 	}
+
+	@Test
+    void testDeletaTarefa() {
+        UUID idTarefa = UUID.randomUUID();
+        String usuario = "usuario@exemplo.com";
+        Usuario usuarioMock = DataHelper.createUsuario();
+        Tarefa tarefaMock = DataHelper.createTarefa();
+        when(usuarioRepository.buscaUsuarioPorEmail(usuario)).thenReturn(usuarioMock);
+        when(tarefaRepository.buscaTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefaMock));
+        tarefaApplicationService.deletaTarefa(usuario, idTarefa);
+        verify(tarefaRepository, times(1)).deletaTarefaPorId(tarefaMock);
+    }
 
 	@Test
 	public void deveConcluirTarefa() {
@@ -199,17 +217,6 @@ class TarefaApplicationServiceTest {
 		verify(tarefaRepository, times(1)).buscaTarefaPorId(idTarefaInvalido);
 	}
 
-	void testDeletaTarefa() {
-		UUID idTarefa = UUID.randomUUID();
-		String usuario = "usuario@exemplo.com";
-		Usuario usuarioMock = DataHelper.createUsuario();
-		Tarefa tarefaMock = DataHelper.createTarefa();
-		when(usuarioRepository.buscaUsuarioPorEmail(usuario)).thenReturn(usuarioMock);
-		when(tarefaRepository.buscaTarefaPorId(idTarefa)).thenReturn(Optional.of(tarefaMock));
-		tarefaApplicationService.deletaTarefa(usuario, idTarefa);
-		verify(tarefaRepository, times(1)).deletaTarefaPorId(tarefaMock);
-	}
-
 	@Test
 	void nãoDeveDeletarTarefa() {
 		UUID idTarefa = UUID.fromString("385c48f2-49ab-485b-87b1-02d5de2f7710");
@@ -262,4 +269,17 @@ class TarefaApplicationServiceTest {
 		verify(tarefaRepository, times(0)).defineNovaPosicaoDaTarefa(any(), any(), any());
 	}
 
+    @Test
+    void validaUsuarioTest() {
+        //cenario
+        Usuario usuario = DataHelper.createUsuario();
+        UUID idUsuarioInvalido = UUID.randomUUID(); // ID inválido de exemplo
+        when(usuarioRepository.buscaUsuarioPorEmail(any())).thenReturn(usuario);
+        //acao
+        APIException exception = assertThrows(APIException.class,
+                () -> tarefaApplicationService.deletaTarefasConcluidas("emailinvalido@email.com", idUsuarioInvalido));
+        //verificacao
+        assertEquals("Credencial de autenticação não é válida!", exception.getMessage());
+        assertEquals(HttpStatus.UNAUTHORIZED, exception.getStatusException());
+    }
 }
