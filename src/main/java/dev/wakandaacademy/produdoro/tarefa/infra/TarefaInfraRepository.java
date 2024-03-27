@@ -108,12 +108,13 @@ public class TarefaInfraRepository implements TarefaRepository {
 		return contarTarefas;
 	}
 
-    public List<Tarefa> buscaTodasSuasTarefa(UUID IdUsuario) {
-        log.info("[inicial] - TarefaInfraRepository - buscaTodasSuasTarefa");
-        List<Tarefa> tarefaList = tarefaSpringMongoDBRepository.findAllByIdUsuario(IdUsuario);
-        log.info("[finaliza] - TarefaInfraRepository - buscaTodasSuasTarefa");
-        return tarefaList;
-    }
+	@Override
+	public List<Tarefa> buscaTodasSuasTarefa(UUID IdUsuario) {
+		log.info("[inicial] - TarefaInfraRepository - buscaTodasSuasTarefa");
+		List<Tarefa> tarefaList = tarefaSpringMongoDBRepository.findAllByIdUsuarioOrderByPosicaoAsc(IdUsuario);
+		log.info("[finaliza] - TarefaInfraRepository - buscaTodasSuasTarefa");
+		return tarefaList;
+	}
 
 	public void defineNovaPosicaoDaTarefa(Tarefa tarefa, List<Tarefa> tarefas, NovaPosicaoDaTarefaRequest novaPosicao) {
 		validaNovaPosicao(tarefas, tarefa, novaPosicao);

@@ -2,8 +2,10 @@ package dev.wakandaacademy.produdoro.tarefa.application.service;
 
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 import dev.wakandaacademy.produdoro.handler.APIException;
 import dev.wakandaacademy.produdoro.tarefa.application.api.EditaTarefaRequest;
 import dev.wakandaacademy.produdoro.tarefa.application.api.NovaPosicaoDaTarefaRequest;
@@ -45,23 +47,17 @@ public class TarefaApplicationService implements TarefaService {
 		return tarefa;
 	}
 
-    @Override
-    public void ativaTarefa(UUID idTarefa, String emailUsuario) {
-        log.info("[inicia] TarefaApplicationService - ativaTarefa");
-        Tarefa tarefa = detalhaTarefa(emailUsuario, idTarefa);
-        Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(emailUsuario);
-        tarefaRepository.desativaTarefas(usuario.getIdUsuario());
-        tarefa.ativaTarefa();
-        tarefaRepository.salva(tarefa);
-        log.info("[finaliza] TarefaApplicationService - ativaTarefa");
-    }
+	@Override
+	public void ativaTarefa(UUID idTarefa, String emailUsuario) {
+		log.info("[inicia] TarefaApplicationService - ativaTarefa");
+		Tarefa tarefa = detalhaTarefa(emailUsuario, idTarefa);
+		Usuario usuario = usuarioRepository.buscaUsuarioPorEmail(emailUsuario);
+		tarefaRepository.desativaTarefas(usuario.getIdUsuario());
+		tarefa.ativaTarefa();
+		tarefaRepository.salva(tarefa);
+		log.info("[finaliza] TarefaApplicationService - ativaTarefa");
+	}
 
-    @Override
-    public void deletaTarefa(String usuario, UUID idTarefa) {
-        log.info("[inicia] TarefaApplicationService - deletaTarefa");
-        tarefaRepository.deletaTarefaPorId(detalhaTarefa(usuario, idTarefa));
-        log.info("[finaliza] TarefaApplicationService - deletaTarefa");
-    }
 	@Override
 	public void editaTarefa(String emailUsuario, UUID idTarefa, EditaTarefaRequest tarefaRequest) {
 		log.info("[inicia] TarefaApplicationService - editaTarefa");
@@ -158,12 +154,12 @@ public class TarefaApplicationService implements TarefaService {
 		log.info("[finaliza] TarefaApplicationService - reordenaTarefasAposDeletarTarefasConcluidas");
 	}
 
-	/*@Override
+	@Override
 	public void deletaTarefa(String usuario, UUID idTarefa) {
 		log.info("[inicia] TarefaApplicationService - deletaTarefa");
 		Tarefa tarefaASerDeletada = detalhaTarefa(usuario, idTarefa);
 		tarefaRepository.deletaTarefaPorId(tarefaASerDeletada);
 		reordenaTarefasAposDeletarUmaTarefaEspecifica(usuario, tarefaASerDeletada);
 		log.info("[finaliza] TarefaApplicationService - deletaTarefa");
-	}*/
+	}
 }
